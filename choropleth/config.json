@@ -1,0 +1,31 @@
+{
+  "exampleConfigProperty": "test",
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "sourceMap": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "zoomToLayer": true,
+  "layerUrls": [
+    "https://services1.arcgis.com/4ezfu5dIwH83BUNL/arcgis/rest/services/Michigan_FI_Map2_WFL1/FeatureServer/"
+  ],
+  "layerUrls_old": [
+    {
+      "LFPR": "https://services1.arcgis.com/4ezfu5dIwH83BUNL/arcgis/rest/services/Michigan_FI_Map2_WFL1/FeatureServer/20",
+      "ALICE": "https://services1.arcgis.com/4ezfu5dIwH83BUNL/arcgis/rest/services/Michigan_FI_Map2_WFL1/FeatureServer/26",
+      "ISSUANCE": "https://services1.arcgis.com/4ezfu5dIwH83BUNL/arcgis/rest/services/Michigan_FI_Map2_WFL1/FeatureServer/13"
+    }
+  ],
+  "layerId": "",
+  "include": [
+    "src",
+    "src/**/*.ts",
+    "@types/**/*.d.ts"
+  ]
+}

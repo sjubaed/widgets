@@ -1,0 +1,41 @@
+.button {
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    width: 250px;
+    border: 1px solid #c6c6c6;
+    margin-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+.button:hover {
+    background: #008b8b;
+    color: #ffffff;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.buttonClicked {
+    background: #008b8b !important;
+    color: #ffffff;
+}
+
+.collapseToggle {
+/*    width: auto;*/
+    overflow: auto;
+    text-overflow: auto;
+    display: flex;
+    font-size: 15px;
+    float: left;
+    font-family: "Times New Roman", Times, serif;
+    font-variant: small-caps;
+    max-width: 300px;
+/*    width: 125%;*/
+    padding: 5%;
+    margin: auto;
+    background-color: white;
+/*    // box-shadow: 20px 20px 50px 10px white;*/
+    border-radius: 12px;
+    border: 1px solid lightblue;
+    flex-direction: column;  
+}

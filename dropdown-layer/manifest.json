@@ -1,0 +1,20 @@
+{
+  "name": "dropdown-layer",
+  "label": "Drowndown practice",
+  "type": "widget",
+  "version": "1.12.0",
+  "exbVersion": "1.12.0",
+  "author": "Esri R&D Center Beijing",
+  "description": "Multi-Select Dropdown widget",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {},
+  "dependency": ["jimu-arcgis"],
+  "translatedLocales": [
+    "en"
+  ],
+  "defaultSize": {
+    "width": 800,
+    "height": 500
+  }
+}

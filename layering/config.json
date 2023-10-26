@@ -1,0 +1,20 @@
+{
+  "exampleConfigProperty": "test",
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "sourceMap": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "zoomToLayer": true,
+  "include": [
+    "src",
+    "src/**/*.ts",
+    "@types/**/*.d.ts"
+  ]
+}
