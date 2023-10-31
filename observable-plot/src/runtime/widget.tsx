@@ -54,13 +54,8 @@ export default function Widget () {
   return (
     <div className="widget-d3 jimu-widget p-2">
       <p>
-        This widget shows how to include an external library (D3.js) in your
-        custom Experience Builder widget. The D3.js code being used comes from
-          the tutorial{' '}
-        <a href="https://observablehq.com/@d3/lets-make-a-bar-chart">
-          Let’s Make a Bar Chart, Part 1
-          </a>
-          .
+        This widget shows how to include ObservableHQ's Plot in your
+        custom Experience Builder widget.
         </p>
       <div ref={mainRef}></div>
     </div>
