@@ -130,7 +130,7 @@ const Setting = (props: AllWidgetSettingProps<any>) => {
                 useDataSources={props.useDataSources}
                 onChange={onDataSourceChange}
                 widgetId={props.id}
-                hideDataView={true}
+                hideDataView={false} // allows for selected features, i.e. data for single county
                 isMultiple={false}
                 />
             </div>
