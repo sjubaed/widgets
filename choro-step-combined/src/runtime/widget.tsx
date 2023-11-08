@@ -490,7 +490,7 @@ function App(props: AllWidgetProps<any>) {
                 <Option value={IndicatorVal.ALICEComb}>{"Combined ALICE and Household Poverty"}</Option>
                 <Option divider></Option>
                 <Option header>{"Food Assistance"}</Option>
-                <Option value={IndicatorVal.Issuance}>{"Issuance"}</Option>
+                {/*<Option value={IndicatorVal.Issuance}>{"Issuance"}</Option>*/}
                 <Option value={IndicatorVal.SNAPHH}>{"SNAP (Households)"}</Option>
                 <Option value={IndicatorVal.SNAPP}>{"SNAP (Persons)"}</Option>
                 <Option value={IndicatorVal.WIC}>{"WIC"}</Option>
@@ -630,7 +630,7 @@ function App(props: AllWidgetProps<any>) {
                 <Option value={IndicatorVal.ALICEComb}>{"Combined ALICE and Household Poverty"}</Option>
                 <Option divider></Option>
                 <Option header>{"Food Assistance"}</Option>
-                <Option value={IndicatorVal.Issuance}>{"Issuance"}</Option>
+                {/*<Option value={IndicatorVal.Issuance}>{"Issuance"}</Option>*/}
                 <Option value={IndicatorVal.SNAPHH}>{"SNAP (Households)"}</Option>
                 <Option value={IndicatorVal.SNAPP}>{"SNAP (Persons)"}</Option>
                 <Option value={IndicatorVal.WIC}>{"WIC"}</Option>

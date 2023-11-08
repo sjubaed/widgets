@@ -3,7 +3,7 @@
   "label": "Checkbox Layer",
   "type": "widget",
   "version": "1.7.0",
-  "exbVersion": "1.7.0",
+  "exbVersion": "1.12.0",
   "dependency": "jimu-arcgis",
   "author": "Sam Jubaed",
   "description": "This widget select layers via checkbox.",

@@ -3,7 +3,7 @@
   "label": "Custom Legend",
   "type": "widget",
   "version": "1.7.0",
-  "exbVersion": "1.7.0",
+  "exbVersion": "1.12.0",
   "author": "Sam Jubaed",
   "description": "Practice widget",
   "dependency": "jimu-arcgis",
