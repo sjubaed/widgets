@@ -62,6 +62,7 @@ function Multiselection(props: AllWidgetProps<any>) {
   const [showFBDCGroup, setshowFBDCGroup] = useState(false);
   const [enableMI, setMI] = useState(false);
   const [enableFO, setFO] = useState(false);
+  const [enableDUFB, setDUFB] = useState(false);
   const [showSNAPGroup, setshowSNAPGroup] = useState(false);
   
   const [enableAllFB, setAllFB] = useState(false);
@@ -381,6 +382,32 @@ function Multiselection(props: AllWidgetProps<any>) {
       }
     }
     setFO(!enableFO);
+  };
+
+  const ShowDUFB = () => {
+    if (jimuMapView) {
+      const layerList = new LayerList({
+        view: jimuMapView.view
+      });
+
+      if (enableDUFB === false) {
+        jimuMapView.view.when(() => {
+          const layer1 = layerList.operationalItems.find((layerView) => {
+            return layerView.title === "DoubleUp Food Bucks";
+          });
+          layer1.visible = true
+        });
+      }
+      else {
+        jimuMapView.view.when(() => {
+          const layer1 = layerList.operationalItems.find((layerView) => {
+            return layerView.title === "DoubleUp Food Bucks";
+          });
+          layer1.visible = false
+        });
+      }
+    }
+    setDUFB(!enableDUFB);
   };
 
   const ShowSNAPGroup = () => {
@@ -790,6 +817,17 @@ function Multiselection(props: AllWidgetProps<any>) {
             <AccordionDetails>
             </AccordionDetails>
           </Accordion>
+
+          {/*DUFB*/}
+          <Accordion onChange={ShowDUFB} className={`MuiAccordion`}>
+            <AccordionSummary>
+              <Typography align="center" sx={{ fontSize: 13 }}>DoubleUp Food Bucks Sites</Typography>
+            </AccordionSummary>
+
+            <AccordionDetails>
+            </AccordionDetails>
+          </Accordion>
+
 
           {/*SNAP Stores*/}
           <Accordion onChange={ShowSNAPGroup} className={`MuiAccordion`}>
