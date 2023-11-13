@@ -67,7 +67,7 @@ enum IndicatorVal {
   HHP = "Poverty (HH)",
   ALICE = "ALICE",
   ALICEComb = "Combined ALICE and HH Poverty",
-  Issuance = "Issuance",
+  FAP = "FAP",
   SNAPHH = "SNAP HH",
   SNAPP = "SNAP Persons",
   WIC = "WIC",
@@ -80,7 +80,8 @@ enum IndicatorVal {
   MultiRace = "Multiracial",
   Hispanic = "Hispanic",
   FAC = "FA Child",
-  FAO = "FA Overall"
+  FAO = "FA Overall",
+  SchMeal = "CEP Students Receiving"
 }
 // "None", "Labor Force Participation Rate", "Unemployment",
 //       "Income", "Housing", "Overall Poverty", "Child Poverty", "Senior Poverty",
@@ -92,6 +93,7 @@ enum YearChoro {
   Y2018 = "2018",
   Y2019 = "2019",
   Y2020 = "2020",
+  Y2021 = "2021",
   YNone = "None"
 }
 
@@ -140,9 +142,13 @@ function App(props: AllWidgetProps<any>) {
   const [indicValRight, setIndicValRight] = useState(IndicatorVal.None);
   
   const [disable2018Left, setDisable2018Left] = useState(false);
+  const [disable2019Left, setDisable2019Left] = useState(false);
   const [disable2020Left, setDisable2020Left] = useState(false);
+  const [disable2021Left, setDisable2021Left] = useState(false);
   const [disable2018Right, setDisable2018Right] = useState(false);
+  const [disable2019Right, setDisable2019Right] = useState(false);
   const [disable2020Right, setDisable2020Right] = useState(false);
+  const [disable2021Right, setDisable2021Right] = useState(false);
   
   // const [comparisonLayers, setCompareLayers] = useState(Array<string>);
   const [leadLayer, setLeadLayer] = useState("");
@@ -186,22 +192,27 @@ function App(props: AllWidgetProps<any>) {
   const loadYearsLeft = (evt) => {
     setYearChoroLeft(YearChoro.YNone);
 
-    if (evt.target.value === IndicatorVal.WIC || evt.target.value === IndicatorVal.Issuance || evt.target.value === IndicatorVal.SNAPHH || evt.target.value === IndicatorVal.SNAPP) {
-      setDisable2018Left(false);
-      setDisable2020Left(false)
+    if (evt.target.value === IndicatorVal.SchMeal) {
+      setDisable2018Left(true);
+      setDisable2019Left(true);
+      setDisable2020Left(true);
     }
 
     else if (evt.target.value === IndicatorVal.HHP || evt.target.value === IndicatorVal.ALICE || evt.target.value === IndicatorVal.ALICEComb) {
-      setDisable2018Left(true);
-      setDisable2020Left(true)
+      setDisable2020Left(true);
     }
 
     else {
       setDisable2018Left(false);
-      setDisable2020Left(true)
+      setDisable2019Left(false);
+      setDisable2020Left(false);
+      setDisable2021Left(false);
     }
 
     setIndicValLeft(evt.target.value);
+    console.log("Disable 2018", disable2018Left);
+    console.log("Disable 2019", disable2019Left);
+    console.log("Disable 2020", disable2020Left);
     // setYrSt("");
     // setIndSt("");
   }
@@ -209,19 +220,21 @@ function App(props: AllWidgetProps<any>) {
   const loadYearsRight = (evt) => {
     setYearChoroRight(YearChoro.YNone);
 
-    if (evt.target.value === IndicatorVal.WIC || evt.target.value === IndicatorVal.Issuance || evt.target.value === IndicatorVal.SNAPHH || evt.target.value === IndicatorVal.SNAPP) {
-      setDisable2018Right(false);
-      setDisable2020Right(false)
+    if (evt.target.value === IndicatorVal.SchMeal) {
+      setDisable2018Right(true);
+      setDisable2019Right(true);
+      setDisable2020Right(true);
     }
 
     else if (evt.target.value === IndicatorVal.HHP || evt.target.value === IndicatorVal.ALICE || evt.target.value === IndicatorVal.ALICEComb) {
-      setDisable2018Right(true);
-      setDisable2020Right(true)
+      setDisable2020Right(true);
     }
 
     else {
       setDisable2018Right(false);
-      setDisable2020Right(true)
+      setDisable2019Right(false);
+      setDisable2020Right(false);
+      setDisable2021Right(false);
     }
 
     setIndicValRight(evt.target.value);
@@ -239,8 +252,8 @@ function App(props: AllWidgetProps<any>) {
           return layer.children
         });
         layerAll.forEach((layerView) => {
-          if (layerView.title !== "County Boundaries" && layerView.title !== "Food Bank Council of Michigan" && layerView.title !== "MI Bridges Community Partners" &&
-          layerView.title !== "MDHHS Field Offices" && layerView.title !== "Historical SNAP Store Locations") {
+          if (layerView.title !== "County Boundaries" && layerView.title !== "Food Banks" && layerView.title !== "DoubleUp Food Bucks" &&
+            layerView.title !== "MI Bridges Community Partners" && layerView.title !== "MDHHS Field Offices" && layerView.title !== "Historical SNAP Store Locations") {
             return layerView.visible = false
           }
         });
@@ -490,10 +503,11 @@ function App(props: AllWidgetProps<any>) {
                 <Option value={IndicatorVal.ALICEComb}>{"Combined ALICE and Household Poverty"}</Option>
                 <Option divider></Option>
                 <Option header>{"Food Assistance"}</Option>
-                {/*<Option value={IndicatorVal.Issuance}>{"Issuance"}</Option>*/}
+                <Option value={IndicatorVal.FAP}>{"Average Food Assistance Payments"}</Option>
                 <Option value={IndicatorVal.SNAPHH}>{"SNAP (Households)"}</Option>
                 <Option value={IndicatorVal.SNAPP}>{"SNAP (Persons)"}</Option>
                 <Option value={IndicatorVal.WIC}>{"WIC"}</Option>
+                <Option value={IndicatorVal.SchMeal}>{"Students Receiving School Meals"}</Option>
                 <Option divider></Option>
                 <Option header>{"Race/Ethnicity"}</Option>
                 <Option value={IndicatorVal.White}>{"White"}</Option>
@@ -546,12 +560,17 @@ function App(props: AllWidgetProps<any>) {
                   disabled={disable2018Left}>
                     {"2018"}</Option>
                   <Option
-                  value={YearChoro.Y2019}>
+                  value={YearChoro.Y2019}
+                  disabled={disable2019Left}>
                     {"2019"}</Option>
                   <Option
                   value={YearChoro.Y2020}
                   disabled={disable2020Left}>
                     {"2020"}</Option>
+                  <Option
+                  value={YearChoro.Y2021}
+                  disabled={disable2021Left}>
+                    {"2021"}</Option>
               </Select>
               
               <Box sx={{ mb: 2 }}>
@@ -630,10 +649,11 @@ function App(props: AllWidgetProps<any>) {
                 <Option value={IndicatorVal.ALICEComb}>{"Combined ALICE and Household Poverty"}</Option>
                 <Option divider></Option>
                 <Option header>{"Food Assistance"}</Option>
-                {/*<Option value={IndicatorVal.Issuance}>{"Issuance"}</Option>*/}
+                <Option value={IndicatorVal.FAP}>{"Average Food Assistance Payments"}</Option>
                 <Option value={IndicatorVal.SNAPHH}>{"SNAP (Households)"}</Option>
                 <Option value={IndicatorVal.SNAPP}>{"SNAP (Persons)"}</Option>
                 <Option value={IndicatorVal.WIC}>{"WIC"}</Option>
+                <Option value={IndicatorVal.SchMeal}>{"Students Receiving School Meals"}</Option>
                 <Option divider></Option>
                 <Option header>{"Race/Ethnicity"}</Option>
                 <Option value={IndicatorVal.White}>{"White"}</Option>
@@ -695,12 +715,17 @@ function App(props: AllWidgetProps<any>) {
                   disabled={disable2018Right}>
                     {"2018"}</Option>
                   <Option
-                  value={YearChoro.Y2019}>
+                  value={YearChoro.Y2019}
+                  disabled={disable2019Right}>
                     {"2019"}</Option>
                   <Option
                   value={YearChoro.Y2020}
                   disabled={disable2020Right}>
                     {"2020"}</Option>
+                  <Option
+                  value={YearChoro.Y2021}
+                  disabled={disable2021Right}>
+                    {"2021"}</Option>
               </Select>
               
               <Box sx={{ mb: 2 }}>
