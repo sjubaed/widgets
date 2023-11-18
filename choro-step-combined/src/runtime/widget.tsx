@@ -517,7 +517,7 @@ function App(props: AllWidgetProps<any>) {
                 <Option value={IndicatorVal.Black}>{"Black"}</Option>
                 <Option value={IndicatorVal.Asian}>{"Asian"}</Option>
                 <Option value={IndicatorVal.PI}>{"Pacific Islander"}</Option>
-                <Option value={IndicatorVal.Native}>{"Native"}</Option>
+                <Option value={IndicatorVal.Native}>{"Native American"}</Option>
                 <Option value={IndicatorVal.Other}>{"Other Race"}</Option>
                 <Option value={IndicatorVal.MultiRace}>{"Multiple Races"}</Option>
                 <Option value={IndicatorVal.Hispanic}>{"Hispanic"}</Option>
@@ -667,7 +667,7 @@ function App(props: AllWidgetProps<any>) {
                 <Option value={IndicatorVal.Black}>{"Black"}</Option>
                 <Option value={IndicatorVal.Asian}>{"Asian"}</Option>
                 <Option value={IndicatorVal.PI}>{"Pacific Islander"}</Option>
-                <Option value={IndicatorVal.Native}>{"Native"}</Option>
+                <Option value={IndicatorVal.Native}>{"Native American"}</Option>
                 <Option value={IndicatorVal.Other}>{"Other Race"}</Option>
                 <Option value={IndicatorVal.MultiRace}>{"Multiple Races"}</Option>
                 <Option value={IndicatorVal.Hispanic}>{"Hispanic"}</Option>
