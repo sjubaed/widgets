@@ -9,6 +9,8 @@ import LayerList from "esri/widgets/LayerList";
 import Layer from "esri/layers/Layer";
 import FeatureLayer from "esri/layers/FeatureLayer";
 import View from "esri/views/View";
+import relationshipRendererCreator from "esri/smartMapping/renderers/relationship";
+import MapView from "esri/views/MapView";
 import { layer } from "esri/views/3d/support/LayerPerformanceInfo";
 import Legend from "esri/widgets/Legend";
 import Expand from "esri/widgets/Expand";
@@ -132,6 +134,10 @@ function App(props: AllWidgetProps<any>) {
 
   const [jimuMapView, setJimuMapView] = useState(undefined);
 
+  const [featureLayerOnMap, setFeatureLayer] = useState(undefined);
+  const [layerList, setLayerList] = useState(undefined);
+  const [checkedState, setCheckedState] = useState(true);
+
   const [activeStep, setActiveStep] = useState(0);
   const [collapseOpen, setCollapseOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(true);
@@ -188,207 +194,253 @@ function App(props: AllWidgetProps<any>) {
   };
 
 
-  // Load Years for Both Sides
-  const loadYearsLeft = (evt) => {
-    setYearChoroLeft(YearChoro.YNone);
+  const createRelationshipRenderer = () => {
+    const featureLayer = new FeatureLayer({
+      portalItem: {
+        id: "c15dee83f38946e386a06547a069456f" // portal ID of map
+      },
+    });
 
-    if (evt.target.value === IndicatorVal.SchMeal) {
-      setDisable2018Left(true);
-      setDisable2019Left(true);
-      setDisable2020Left(true);
-    }
-
-    else if (evt.target.value === IndicatorVal.HHP || evt.target.value === IndicatorVal.ALICE || evt.target.value === IndicatorVal.ALICEComb) {
-      setDisable2020Left(true);
-    }
-
-    else {
-      setDisable2018Left(false);
-      setDisable2019Left(false);
-      setDisable2020Left(false);
-      setDisable2021Left(false);
-    }
-
-    setIndicValLeft(evt.target.value);
-    console.log("Disable 2018", disable2018Left);
-    console.log("Disable 2019", disable2019Left);
-    console.log("Disable 2020", disable2020Left);
-    // setYrSt("");
-    // setIndSt("");
-  }
-
-  const loadYearsRight = (evt) => {
-    setYearChoroRight(YearChoro.YNone);
-
-    if (evt.target.value === IndicatorVal.SchMeal) {
-      setDisable2018Right(true);
-      setDisable2019Right(true);
-      setDisable2020Right(true);
-    }
-
-    else if (evt.target.value === IndicatorVal.HHP || evt.target.value === IndicatorVal.ALICE || evt.target.value === IndicatorVal.ALICEComb) {
-      setDisable2020Right(true);
-    }
-
-    else {
-      setDisable2018Right(false);
-      setDisable2019Right(false);
-      setDisable2020Right(false);
-      setDisable2021Right(false);
-    }
-
-    setIndicValRight(evt.target.value);
-    // setYrSt("");
-    // setIndSt("");
-  }
-
-  const removeAllChoro = () => {
-    if (jimuMapView) {
-      const layerList = new LayerList({
-        view: jimuMapView.view
-      });
-      jimuMapView.view.when(() => {
-        const layerAll = layerList.operationalItems.flatten((layer) => {
-          return layer.children
-        });
-        layerAll.forEach((layerView) => {
-          if (layerView.title !== "County Boundaries" && layerView.title !== "Food Banks" && layerView.title !== "DoubleUp Food Bucks" &&
-            layerView.title !== "MI Bridges Community Partners" && layerView.title !== "MDHHS Field Offices" && layerView.title !== "Historical SNAP Store Locations") {
-            return layerView.visible = false
-          }
-        });
-      })
-
-      jimuMapView.view.ui.empty("bottom-left");
-      jimuMapView.view.ui.empty("bottom-right");
+    const params = {
+      layer: featureLayer,
+      view: jimuMapView.view,
+      field1: {
+        field: "labor_force_participation_rate_2019",
+      },
+      field2: {
+        field: "unemp_rate_2019",
+      },
+      numClasses: 2,
+      focus: "HH",
+      edgesType: "solid"
     };
+
+    return relationshipRendererCreator.createRenderer(params);
   }
 
-  // Swipe widget
-  const makeSwipe = () => {
-    console.log("makeSwipe is running")
-    if (jimuMapView){
-      console.log("jimuMapView is running")
-      const layerList = new LayerList({
-        view: jimuMapView.view
-      });
-      removeAllChoro();
-      console.log("Comparison layers are currently", leadLayer, "and", trailLayer)
 
-      jimuMapView.view.when(() => {
-        const layer1 = layerList.operationalItems.flatten((layer) => {
-          return layer.children
+  const changeHandler = (evt) => {
+    if (evt.target.value && evt.target.value !== "") {  
+      if (this.state.jimuMapView) {
+        this.setState({
+          checkedState: !this.state.checkedState
         });
+        const featureLayer = new FeatureLayer({
+          portalItem: {
+            id: "c15dee83f38946e386a06547a069456f" // portal ID of map
+          },
+        });
+        this.state.jimuMapView.view.when().then(() => {
+          return featureLayer.when();
+        }).then(this.createRelationshipRenderer).then((response) => {
+          featureLayer.renderer = response.renderer;
+        });
+      }
+    }
+  }
 
-        if (leadLayer !== "" && trailLayer !== "") {
-          const leftLayer = layer1.find((layerView) => {
-            return layerView.title.includes(leadLayer)
-          });
-          const rightLayer = layer1.find((layerView) => {
-            return layerView.title.includes(trailLayer)
-          });
+
+  // Load Years for Both Sides
+  // const loadYearsLeft = (evt) => {
+  //   setYearChoroLeft(YearChoro.YNone);
+
+  //   if (evt.target.value === IndicatorVal.SchMeal) {
+  //     setDisable2018Left(true);
+  //     setDisable2019Left(true);
+  //     setDisable2020Left(true);
+  //   }
+
+  //   else if (evt.target.value === IndicatorVal.HHP || evt.target.value === IndicatorVal.ALICE || evt.target.value === IndicatorVal.ALICEComb) {
+  //     setDisable2020Left(true);
+  //   }
+
+  //   else {
+  //     setDisable2018Left(false);
+  //     setDisable2019Left(false);
+  //     setDisable2020Left(false);
+  //     setDisable2021Left(false);
+  //   }
+
+  //   setIndicValLeft(evt.target.value);
+  //   console.log("Disable 2018", disable2018Left);
+  //   console.log("Disable 2019", disable2019Left);
+  //   console.log("Disable 2020", disable2020Left);
+  //   // setYrSt("");
+  //   // setIndSt("");
+  // }
+
+  // const loadYearsRight = (evt) => {
+  //   setYearChoroRight(YearChoro.YNone);
+
+  //   if (evt.target.value === IndicatorVal.SchMeal) {
+  //     setDisable2018Right(true);
+  //     setDisable2019Right(true);
+  //     setDisable2020Right(true);
+  //   }
+
+  //   else if (evt.target.value === IndicatorVal.HHP || evt.target.value === IndicatorVal.ALICE || evt.target.value === IndicatorVal.ALICEComb) {
+  //     setDisable2020Right(true);
+  //   }
+
+  //   else {
+  //     setDisable2018Right(false);
+  //     setDisable2019Right(false);
+  //     setDisable2020Right(false);
+  //     setDisable2021Right(false);
+  //   }
+
+  //   setIndicValRight(evt.target.value);
+  //   // setYrSt("");
+  //   // setIndSt("");
+  // }
+
+  // const removeAllChoro = () => {
+  //   if (jimuMapView) {
+  //     const layerList = new LayerList({
+  //       view: jimuMapView.view
+  //     });
+  //     jimuMapView.view.when(() => {
+  //       const layerAll = layerList.operationalItems.flatten((layer) => {
+  //         return layer.children
+  //       });
+  //       layerAll.forEach((layerView) => {
+  //         if (layerView.title !== "County Boundaries" && layerView.title !== "Food Banks" && layerView.title !== "DoubleUp Food Bucks" &&
+  //           layerView.title !== "MI Bridges Community Partners" && layerView.title !== "MDHHS Field Offices" && layerView.title !== "Historical SNAP Store Locations") {
+  //           return layerView.visible = false
+  //         }
+  //       });
+  //     })
+
+  //     jimuMapView.view.ui.empty("bottom-left");
+  //     jimuMapView.view.ui.empty("bottom-right");
+  //   };
+  // }
+
+  // // Swipe widget
+  // const makeSwipe = () => {
+  //   console.log("makeSwipe is running")
+  //   if (jimuMapView){
+  //     console.log("jimuMapView is running")
+  //     const layerList = new LayerList({
+  //       view: jimuMapView.view
+  //     });
+  //     removeAllChoro();
+  //     console.log("Comparison layers are currently", leadLayer, "and", trailLayer)
+
+  //     jimuMapView.view.when(() => {
+  //       const layer1 = layerList.operationalItems.flatten((layer) => {
+  //         return layer.children
+  //       });
+
+  //       if (leadLayer !== "" && trailLayer !== "") {
+  //         const leftLayer = layer1.find((layerView) => {
+  //           return layerView.title.includes(leadLayer)
+  //         });
+  //         const rightLayer = layer1.find((layerView) => {
+  //           return layerView.title.includes(trailLayer)
+  //         });
   
-          const swipe = new Swipe({
-            leadingLayers: [leftLayer.layer],
-            trailingLayers: [rightLayer.layer],
-            position: 50,
-            view: jimuMapView.view,
-            id: "swipe-widget"
-          });
+  //         const swipe = new Swipe({
+  //           leadingLayers: [leftLayer.layer],
+  //           trailingLayers: [rightLayer.layer],
+  //           position: 50,
+  //           view: jimuMapView.view,
+  //           id: "swipe-widget"
+  //         });
 
-          jimuMapView.view.ui.add(swipe);
-          leftLayer.layer.opacity = 0.8,
-          leftLayer.visible = true,
-          rightLayer.layer.opacity = 0.8,
-          rightLayer.visible = true
-        };
-      });
+  //         jimuMapView.view.ui.add(swipe);
+  //         leftLayer.layer.opacity = 0.8,
+  //         leftLayer.visible = true,
+  //         rightLayer.layer.opacity = 0.8,
+  //         rightLayer.visible = true
+  //       };
+  //     });
 
-      makeLegend(leadLayer, "bottom-left");
-      makeLegend(trailLayer, "bottom-right");
-    }
-  }
+  //     makeLegend(leadLayer, "bottom-left");
+  //     makeLegend(trailLayer, "bottom-right");
+  //   }
+  // }
 
-  // Change Handlers
-  const changeHandlerLeft = (evt) => {
-    if (jimuMapView) {
-      removeAllChoro();
-      setYearChoroLeft(evt.target.value);
-      setLeadLayer(indicValLeft + " " + evt.target.value);
-    }
-    console.log("After left choices, left layer is currently", leadLayer)
-  }
+  // // Change Handlers
+  // const changeHandlerLeft = (evt) => {
+  //   if (jimuMapView) {
+  //     removeAllChoro();
+  //     setYearChoroLeft(evt.target.value);
+  //     setLeadLayer(indicValLeft + " " + evt.target.value);
+  //   }
+  //   console.log("After left choices, left layer is currently", leadLayer)
+  // }
 
-  const changeHandlerRight = (evt) => {
-    if (jimuMapView) {
-      removeAllChoro();
-      setYearChoroRight(evt.target.value);
-      setTrailLayer(indicValRight + " " + evt.target.value);
-    }
-    console.log("After right choices, right layer is currently", trailLayer)
-  }
+  // const changeHandlerRight = (evt) => {
+  //   if (jimuMapView) {
+  //     removeAllChoro();
+  //     setYearChoroRight(evt.target.value);
+  //     setTrailLayer(indicValRight + " " + evt.target.value);
+  //   }
+  //   console.log("After right choices, right layer is currently", trailLayer)
+  // }
 
-  const makeChoro = (evt) => {
-    var indicLayer = indicValLeft + " " + yearChoroLeft;
-    console.log("Event value is", evt.target.value);
-    console.log("Indicator value is", indicValLeft);
-    console.log("Year value is", yearChoroLeft);
-    console.log("Selected Layer is", indicLayer);
-    console.log("Lead layer is", leadLayer);
+  // const makeChoro = (evt) => {
+  //   var indicLayer = indicValLeft + " " + yearChoroLeft;
+  //   console.log("Event value is", evt.target.value);
+  //   console.log("Indicator value is", indicValLeft);
+  //   console.log("Year value is", yearChoroLeft);
+  //   console.log("Selected Layer is", indicLayer);
+  //   console.log("Lead layer is", leadLayer);
 
-    if (jimuMapView && indicValLeft !== IndicatorVal.None) {
+  //   if (jimuMapView && indicValLeft !== IndicatorVal.None) {
 
-      const layerList = new LayerList({
-        view: jimuMapView.view
-      });
-      removeAllChoro();
-      jimuMapView.view.when(() => {
-        const layer1 = layerList.operationalItems.flatten((layer) => {
-          return layer.children
-        });
-        const sublayer1 = layer1.find((layerView) => {
-          return layerView.title.includes(leadLayer)
-        });
+  //     const layerList = new LayerList({
+  //       view: jimuMapView.view
+  //     });
+  //     removeAllChoro();
+  //     jimuMapView.view.when(() => {
+  //       const layer1 = layerList.operationalItems.flatten((layer) => {
+  //         return layer.children
+  //       });
+  //       const sublayer1 = layer1.find((layerView) => {
+  //         return layerView.title.includes(leadLayer)
+  //       });
 
-        sublayer1.layer.opacity = 0.8,
-        sublayer1.visible = true;
-        sublayer1.parent.visible = true;
-        sublayer1.parent.parent.visible = true;
+  //       sublayer1.layer.opacity = 0.8,
+  //       sublayer1.visible = true;
+  //       sublayer1.parent.visible = true;
+  //       sublayer1.parent.parent.visible = true;
 
-        // const legMap = new Expand({
-        //   view: jimuMapView.view,
-        //   content: ({
-        //     new Legend({
-        //       view: jimuMapView.view
-        //       // container: document.createElement('div')
-        //       // layerInfos: [{
-        //       //   layer: sublayer1.layer,
-        //       //   title: ""
-        //       // }]
-        //     });
-        //   }),
-        //   expanded: true,
-        //   id: "legend"
-        // });
+  //       // const legMap = new Expand({
+  //       //   view: jimuMapView.view,
+  //       //   content: ({
+  //       //     new Legend({
+  //       //       view: jimuMapView.view
+  //       //       // container: document.createElement('div')
+  //       //       // layerInfos: [{
+  //       //       //   layer: sublayer1.layer,
+  //       //       //   title: ""
+  //       //       // }]
+  //       //     });
+  //       //   }),
+  //       //   expanded: true,
+  //       //   id: "legend"
+  //       // });
 
-        // jimuMapView.view.ui.add(legMap, "bottom-left")
-      });
+  //       // jimuMapView.view.ui.add(legMap, "bottom-left")
+  //     });
 
-      makeLegend(leadLayer, "bottom-left");
-    }
-  }
+  //     makeLegend(leadLayer, "bottom-left");
+  //   }
+  // }
 
-  const clearMap = () => {
-    removeAllChoro();
-    setLeadLayer("");
-    setTrailLayer("");
-    setYearChoroLeft(YearChoro.YNone);
-    setIndicValLeft(IndicatorVal.None);
-    setYearChoroRight(YearChoro.YNone);
-    setIndicValRight(IndicatorVal.None);
-    jimuMapView.view.ui.find("swipe-widget").destroy();
-    jimuMapView.view.ui.remove("swipe-widget");
-  }
+  // const clearMap = () => {
+  //   removeAllChoro();
+  //   setLeadLayer("");
+  //   setTrailLayer("");
+  //   setYearChoroLeft(YearChoro.YNone);
+  //   setIndicValLeft(IndicatorVal.None);
+  //   setYearChoroRight(YearChoro.YNone);
+  //   setIndicValRight(IndicatorVal.None);
+  //   jimuMapView.view.ui.find("swipe-widget").destroy();
+  //   jimuMapView.view.ui.remove("swipe-widget");
+  // }
 
 
   const makeLegend = (evt: String, pos: String) => {

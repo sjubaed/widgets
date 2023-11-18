@@ -492,12 +492,12 @@ function App(props: AllWidgetProps<any>) {
                 <Option value={IndicatorVal.LFPR}>{"Labor Force Participation Rate"}</Option>
                 <Option value={IndicatorVal.Unemployment}>{"Unemployment Rate"}</Option>
                 <Option value={IndicatorVal.Income}>{"Median Income"}</Option>
-                <Option value={IndicatorVal.Housing}>{"Housing Burdened"}</Option>
                 <Option divider></Option>
                 <Option header>{"Poverty"}</Option>
                 <Option value={IndicatorVal.OP}>{"Overall Poverty"}</Option>
                 <Option value={IndicatorVal.CP}>{"Child Poverty"}</Option>
                 <Option value={IndicatorVal.SP}>{"Senior Poverty"}</Option>
+                <Option value={IndicatorVal.Housing}>{"Housing Burdened"}</Option>
                 <Option value={IndicatorVal.HHP}>{"Household Poverty"}</Option>
                 <Option value={IndicatorVal.ALICE}>{"ALICE"}</Option>
                 <Option value={IndicatorVal.ALICEComb}>{"Combined ALICE and Household Poverty"}</Option>
@@ -638,12 +638,12 @@ function App(props: AllWidgetProps<any>) {
                 <Option value={IndicatorVal.LFPR}>{"Labor Force Participation Rate"}</Option>
                 <Option value={IndicatorVal.Unemployment}>{"Unemployment Rate"}</Option>
                 <Option value={IndicatorVal.Income}>{"Median Income"}</Option>
-                <Option value={IndicatorVal.Housing}>{"Housing Burdened"}</Option>
                 <Option divider></Option>
                 <Option header>{"Poverty"}</Option>
                 <Option value={IndicatorVal.OP}>{"Overall Poverty"}</Option>
                 <Option value={IndicatorVal.CP}>{"Child Poverty"}</Option>
                 <Option value={IndicatorVal.SP}>{"Senior Poverty"}</Option>
+                <Option value={IndicatorVal.Housing}>{"Housing Burdened"}</Option>
                 <Option value={IndicatorVal.HHP}>{"Household Poverty"}</Option>
                 <Option value={IndicatorVal.ALICE}>{"ALICE"}</Option>
                 <Option value={IndicatorVal.ALICEComb}>{"Combined ALICE and Household Poverty"}</Option>
