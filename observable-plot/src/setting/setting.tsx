@@ -43,7 +43,7 @@ const Setting = (props: AllWidgetSettingProps<any>) => {
   };
 
   const supportedTypes = Immutable([DataSourceTypes.FeatureLayer]);
-  const supportedFieldTypes = Immutable([JimuFieldType.String]);
+  const supportedFieldTypes = Immutable([JimuFieldType.Number]);
 
   const onDataSourceChange = (useDataSources: UseDataSource[]) => {
     props.onSettingChange({
@@ -135,6 +135,18 @@ const Setting = (props: AllWidgetSettingProps<any>) => {
                 />
             </div>
           </SettingRow>
+          <SettingRow>
+              <FieldSelector
+                useDataSources={props.useDataSources}
+                types={supportedFieldTypes}
+                onChange={fieldsListChangeHandler}
+                selectedFields={Immutable([props.config.filterField])}
+                isMultiple={false}
+                isSearchInputHidden={false}
+                isDataSourceDropDownHidden
+                useDropdown
+              />
+            </SettingRow>
         </SettingSection>
 
 {/*        <SettingSection

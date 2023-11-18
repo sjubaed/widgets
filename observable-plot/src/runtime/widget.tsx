@@ -40,6 +40,7 @@ export default function Widget (props: AllWidgetProps<any>) {
     }
 
   const data = d3.ticks(-2, 2, 200).map(Math.sin);
+  console.log(data);
 
 
   var marginLeft = 100;
