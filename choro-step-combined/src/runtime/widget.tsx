@@ -1,6 +1,6 @@
 import { React, AllWidgetProps, jsx, DataSourceComponent, SqlQueryParams, DataSourceManager, QueriableDataSource, DataSource } from 'jimu-core';
 import defaultMessages from './translations/default';
-import { Dropdown, DropdownMenu, DropdownButton, DropdownItem, MultiSelect, Select, Option, Label, Checkbox, CollapsablePanel, CollapsableToggle } from 'jimu-ui';
+import { Dropdown, DropdownMenu, DropdownButton, DropdownItem, MultiSelect, Option, Label, Checkbox, CollapsablePanel, CollapsableToggle } from 'jimu-ui';
 import { type IMConfig } from '../config';
 import { JimuMapView, JimuMapViewComponent } from "jimu-arcgis";
 import { MapDataSourceImpl } from 'jimu-arcgis/arcgis-data-source';
@@ -36,6 +36,8 @@ import Collapse from '@mui/material/Collapse';
 import Alert from '@mui/material/Alert';
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import Tooltip from '@mui/material/Tooltip';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import { styled } from '@mui/material/styles';
 import { purple } from '@mui/material/colors';
@@ -476,6 +478,7 @@ function App(props: AllWidgetProps<any>) {
               {"Select the first indicator"}
             </StepLabel>
             <StepContent>
+              <FormControl fullWidth>
               <Select
                 name="select-indicator"
                 onChange={(evt) => {
@@ -523,6 +526,7 @@ function App(props: AllWidgetProps<any>) {
                 <Option value={IndicatorVal.FAC}>{"Child Rates"}</Option>
                 <Option value={IndicatorVal.FAO}>{"Overall Rates"}</Option>
               </Select>
+              </FormControl>
               
               <Box sx={{ mb: 2 }}>
                 <div>
@@ -549,6 +553,7 @@ function App(props: AllWidgetProps<any>) {
               {"Select year for this indicator"}
             </StepLabel>
             <StepContent>
+            <FormControl fullWidth>
               <Select
                 // value = {yearState}
                 onChange={(evt) => {
@@ -572,6 +577,7 @@ function App(props: AllWidgetProps<any>) {
                   disabled={disable2021Left}>
                     {"2021"}</Option>
               </Select>
+              </FormControl>
               
               <Box sx={{ mb: 2 }}>
                 <div>
@@ -623,6 +629,7 @@ function App(props: AllWidgetProps<any>) {
               {"Select the second indicator"}
             </StepLabel>
             <StepContent>
+            <FormControl fullWidth>
               <Select
                 name="select-indicator"
                 onChange={(evt) => {
@@ -669,6 +676,7 @@ function App(props: AllWidgetProps<any>) {
                 <Option value={IndicatorVal.FAC}>{"Child Rates"}</Option>
                 <Option value={IndicatorVal.FAO}>{"Overall Rates"}</Option>
               </Select>
+              </FormControl>
               
               <Box sx={{ mb: 2 }}>
                 <div>
@@ -702,6 +710,7 @@ function App(props: AllWidgetProps<any>) {
               {"Select year for this indicator"}
             </StepLabel>
             <StepContent>
+            <FormControl fullWidth>
               <Select
                 // value = {yearState}
                 onChange={(evt) => {
@@ -727,6 +736,7 @@ function App(props: AllWidgetProps<any>) {
                   disabled={disable2021Right}>
                     {"2021"}</Option>
               </Select>
+              </FormControl>
               
               <Box sx={{ mb: 2 }}>
                 <div>
