@@ -424,7 +424,8 @@ function App(props: AllWidgetProps<any>) {
 
  
   return (
-    <div className="widget-demo jimu-widget m-2">
+    <div className="widget-demo jimu-widget m-2"
+    {{ overflow: "auto" }}>
     {props.useMapWidgetIds && props.useMapWidgetIds.length === 1 && (
       // The JimuMapViewComponent gives us a connection to the
       // ArcGIS JS API MapView object. We store it in the State.
@@ -432,369 +433,353 @@ function App(props: AllWidgetProps<any>) {
     )}
 
     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-{/*      <CollapsableToggle
-        label = "Click to show indicator panel"
-        level={0}
-        type="default"
-        className={`collapseToggle`}
-        onRequestClose={() => {
-          handleReset();
-          clearMap();
-        }}
-      >
-*/}
+      <ToggleButton sx={{ boxShadow: 3 }} className={`MuiIndicButton ${collapseOpen ? "MuiIndicSelected" : "MuiIndicButton"}`} onChange={() => setCollapseOpen(!collapseOpen)}>Indicator panel</ToggleButton>
+        <Collapse in={collapseOpen}>
+          <Collapse in={alertOpen}>
+            <div style={{ display: "flex", flexDirection: "column", maxWidth: "100%", justifyContent: "center", alignItems: "center" }}>
+              <Box sx={{ p: 1, m: 0.5 }}>
+                <Paper elevation={3}>
+                  <Alert severity="info" onClose={() => setAlertOpen(!alertOpen)}>
+                  <Typography variant="body2">
+                  Select from a list of indicators and years to view on the map to the right. <br /><br />
+                  After choosing the first set of indicator and year, you can select a second set of indicators and years for comparison.
+                  </Typography>
+                </Alert>
+                </Paper>
+              </Box>
+            </div>
+          </Collapse>
 
-    <ToggleButton sx={{ boxShadow: 3 }} className={`MuiIndicButton ${collapseOpen ? "MuiIndicSelected" : "MuiIndicButton"}`} onChange={() => setCollapseOpen(!collapseOpen)}>Indicator panel</ToggleButton>
-    <Collapse in={collapseOpen}>
-      <Collapse in={alertOpen}>
-      <div style={{ display: "flex", flexDirection: "column", maxWidth: "100%", justifyContent: "center", alignItems: "center" }}>
-      <Box sx={{ p: 1, m: 0.5 }}>
-      <Paper elevation={3}>
-      <Alert severity="info" onClose={() => setAlertOpen(!alertOpen)}>
-        <Typography variant="body2">
-          Select from a list of indicators and years to view on the map to the right. <br /><br />
-          After choosing the first set of indicator and year, you can select a second set of indicators and years for comparison.
-        </Typography>
-      </Alert>
-      </Paper>
-      </Box>
-      </div>
-      </Collapse>
-
-      <div style={{ display: "flex", flexDirection: "column", maxWidth: "100%", justifyContent: "center", alignItems: "center" }}>
-      <Paper elevation={5}>
-      <Box sx={{ p: 2, m: 0, bgcolor: 'white' }}>
+          <div style={{ display: "flex", flexDirection: "column", maxWidth: "100%", justifyContent: "center", alignItems: "center" }}>
+            <Paper elevation={5}>
+              <Box sx={{ p: 2, m: 0, bgcolor: 'white' }}>
       
-      
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start'}}>
-        <Tooltip title="Tips" placement="right" arrow>
-          <Button onClick={() => setAlertOpen(!alertOpen)} size="sm" sx={{ m: 0, p: 0, minWidth: 0}}><TipsAndUpdatesIcon fontSize='inherit'/></Button>
-        </Tooltip>
-      </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-start'}}>
+                  <Tooltip title="Tips" placement="right" arrow>
+                    <Button onClick={() => setAlertOpen(!alertOpen)} size="sm" sx={{ m: 0, p: 0, minWidth: 0}}><TipsAndUpdatesIcon fontSize='inherit'/></Button>
+                  </Tooltip>
+                </Box>
 
-      <Stepper activeStep={activeStep} orientation="vertical">
-          <Step>
-            <StepLabel optional={indicValLeft}>
-              {"Select the first indicator"}
-            </StepLabel>
-            <StepContent>
-              <FormControl fullWidth>
-              <Select
-                name="select-indicator"
-                onChange={(evt) => {
-                  // setIndicValLeft(evt.target.value);
-                  loadYearsLeft(evt);
-                }}
-                style={{ maxWidth: "100%"}}
-                // placeholder="Choose a left indicator..."
-                // value = {indicState}
-              >
-                {/*Categories: Poverty, Food Assistance, Race, Housing, Labor, Feeding America*/}
-                {/* <Option value="None">{"None"}</Option> */}
-                <Option header>{"Labor"}</Option>
-                <Option value={IndicatorVal.LFPR}>{"Labor Force Participation Rate"}</Option>
-                <Option value={IndicatorVal.Unemployment}>{"Unemployment Rate"}</Option>
-                <Option value={IndicatorVal.Income}>{"Median Income"}</Option>
-                <Option divider></Option>
-                <Option header>{"Poverty"}</Option>
-                <Option value={IndicatorVal.OP}>{"Overall Poverty"}</Option>
-                <Option value={IndicatorVal.CP}>{"Child Poverty"}</Option>
-                <Option value={IndicatorVal.SP}>{"Senior Poverty"}</Option>
-                <Option value={IndicatorVal.Housing}>{"Housing Burdened"}</Option>
-                <Option value={IndicatorVal.HHP}>{"Household Poverty"}</Option>
-                <Option value={IndicatorVal.ALICE}>{"ALICE"}</Option>
-                <Option value={IndicatorVal.ALICEComb}>{"Combined ALICE and Household Poverty"}</Option>
-                <Option divider></Option>
-                <Option header>{"Food Assistance"}</Option>
-                <Option value={IndicatorVal.FAP}>{"Average Food Assistance Payments"}</Option>
-                <Option value={IndicatorVal.SNAPHH}>{"SNAP (Households)"}</Option>
-                <Option value={IndicatorVal.SNAPP}>{"SNAP (Persons)"}</Option>
-                <Option value={IndicatorVal.WIC}>{"WIC"}</Option>
-                <Option value={IndicatorVal.SchMeal}>{"Students Receiving School Meals"}</Option>
-                <Option divider></Option>
-                <Option header>{"Race/Ethnicity"}</Option>
-                <Option value={IndicatorVal.White}>{"White"}</Option>
-                <Option value={IndicatorVal.Black}>{"Black"}</Option>
-                <Option value={IndicatorVal.Asian}>{"Asian"}</Option>
-                <Option value={IndicatorVal.PI}>{"Pacific Islander"}</Option>
-                <Option value={IndicatorVal.Native}>{"Native American"}</Option>
-                <Option value={IndicatorVal.Other}>{"Other Race"}</Option>
-                <Option value={IndicatorVal.MultiRace}>{"Multiple Races"}</Option>
-                <Option value={IndicatorVal.Hispanic}>{"Hispanic"}</Option>
-                <Option divider></Option>
-                <Option header>{"Feeding America Model Estimates"}</Option>
-                <Option value={IndicatorVal.FAC}>{"Child Rates"}</Option>
-                <Option value={IndicatorVal.FAO}>{"Overall Rates"}</Option>
-              </Select>
-              </FormControl>
-              
-              <Box sx={{ mb: 2 }}>
-                <div>
-                  <Button
-                    variant="contained"
-                    onClick={(evt) => {
-                      // loadYearsLeft(evt);
-                      handleNext();
-                      console.log(indicValLeft, yearChoroLeft, indicValRight, yearChoroRight);
-                    }}
-                    sx={{ mt: 1, mr: 1 }}
-                    disabled={indicValLeft === "None"}
-                  >
-                    {'Continue'}
-                  </Button>
-                </div>
-
-              </Box>
-            </StepContent>
-          </Step>
-
-          <Step>
-            <StepLabel optional={yearChoroLeft}>
-              {"Select year for this indicator"}
-            </StepLabel>
-            <StepContent>
-            <FormControl fullWidth>
-              <Select
-                // value = {yearState}
-                onChange={(evt) => {
-                  // setYearChoroLeft(evt.target.value);
-                  changeHandlerLeft(evt);
-                }}>
-                  <Option
-                  value={YearChoro.Y2018}
-                  disabled={disable2018Left}>
-                    {"2018"}</Option>
-                  <Option
-                  value={YearChoro.Y2019}
-                  disabled={disable2019Left}>
-                    {"2019"}</Option>
-                  <Option
-                  value={YearChoro.Y2020}
-                  disabled={disable2020Left}>
-                    {"2020"}</Option>
-                  <Option
-                  value={YearChoro.Y2021}
-                  disabled={disable2021Left}>
-                    {"2021"}</Option>
-              </Select>
-              </FormControl>
-              
-              <Box sx={{ mb: 2 }}>
-                <div>
-                  <ColorButton
-                    variant="contained"
-                    onClick={(evt) => {
-                      // loadYearsRight(evt);
-                      // handleReset();
-                      makeChoro(evt);
-                      console.log(indicValLeft, yearChoroLeft, evt.target.value);
-                    }}
-                    sx={{ mt: 1, mr: 1 }}
-                    disabled={yearChoroLeft === "None"}
-                  >
-                    {'Show Indicator'}
-                  </ColorButton>
-                  <br />
-                  <Button
-                    variant="contained"
-                    onClick={(evt) => {
-                      // changeHandlerLeft(evt);
-                      handleNext();
-                      removeAllChoro();
-                      console.log(indicValLeft, yearChoroLeft, indicValRight, yearChoroRight);
-                    }}
-                    sx={{ mt: 1, mr: 1 }}
-                    disabled={yearChoroLeft === "None"}
-                  >
-                    {'Continue'}
-                  </Button>
-                  <Button
-                    disabled={false}
-                    onClick={() => {
-                      handleBack();
-                      removeAllChoro();
-                    }}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                </div>
-
-              </Box>
-            </StepContent>
-          </Step>
-
-          <Step>
-            <StepLabel optional={indicValRight}>
-              {"Select the second indicator"}
-            </StepLabel>
-            <StepContent>
-            <FormControl fullWidth>
-              <Select
-                name="select-indicator"
-                onChange={(evt) => {
-                  // setIndicValRight(evt.target.value);
-                  loadYearsRight(evt);
-                }}
-                style={{ maxWidth: "100%"}}
-                // value = {indicState}
-              >
-                {/*Categories: Poverty, Food Assistance, Race, Housing, Labor, Feeding America*/}
-                {/* <Option value="None">{"None"}</Option> */}
-                <Option header>{"Labor"}</Option>
-                <Option value={IndicatorVal.LFPR}>{"Labor Force Participation Rate"}</Option>
-                <Option value={IndicatorVal.Unemployment}>{"Unemployment Rate"}</Option>
-                <Option value={IndicatorVal.Income}>{"Median Income"}</Option>
-                <Option divider></Option>
-                <Option header>{"Poverty"}</Option>
-                <Option value={IndicatorVal.OP}>{"Overall Poverty"}</Option>
-                <Option value={IndicatorVal.CP}>{"Child Poverty"}</Option>
-                <Option value={IndicatorVal.SP}>{"Senior Poverty"}</Option>
-                <Option value={IndicatorVal.Housing}>{"Housing Burdened"}</Option>
-                <Option value={IndicatorVal.HHP}>{"Household Poverty"}</Option>
-                <Option value={IndicatorVal.ALICE}>{"ALICE"}</Option>
-                <Option value={IndicatorVal.ALICEComb}>{"Combined ALICE and Household Poverty"}</Option>
-                <Option divider></Option>
-                <Option header>{"Food Assistance"}</Option>
-                <Option value={IndicatorVal.FAP}>{"Average Food Assistance Payments"}</Option>
-                <Option value={IndicatorVal.SNAPHH}>{"SNAP (Households)"}</Option>
-                <Option value={IndicatorVal.SNAPP}>{"SNAP (Persons)"}</Option>
-                <Option value={IndicatorVal.WIC}>{"WIC"}</Option>
-                <Option value={IndicatorVal.SchMeal}>{"Students Receiving School Meals"}</Option>
-                <Option divider></Option>
-                <Option header>{"Race/Ethnicity"}</Option>
-                <Option value={IndicatorVal.White}>{"White"}</Option>
-                <Option value={IndicatorVal.Black}>{"Black"}</Option>
-                <Option value={IndicatorVal.Asian}>{"Asian"}</Option>
-                <Option value={IndicatorVal.PI}>{"Pacific Islander"}</Option>
-                <Option value={IndicatorVal.Native}>{"Native American"}</Option>
-                <Option value={IndicatorVal.Other}>{"Other Race"}</Option>
-                <Option value={IndicatorVal.MultiRace}>{"Multiple Races"}</Option>
-                <Option value={IndicatorVal.Hispanic}>{"Hispanic"}</Option>
-                <Option divider></Option>
-                <Option header>{"Feeding America Model Estimates"}</Option>
-                <Option value={IndicatorVal.FAC}>{"Child Rates"}</Option>
-                <Option value={IndicatorVal.FAO}>{"Overall Rates"}</Option>
-              </Select>
-              </FormControl>
-              
-              <Box sx={{ mb: 2 }}>
-                <div>
-                  <Button
-                    variant="contained"
-                    onClick={(evt) => {
-                      // loadYearsRight(evt);
-                      handleNext();
-                      console.log(indicValLeft, yearChoroLeft, indicValRight, yearChoroRight);
-                    }}
-                    sx={{ mt: 1, mr: 1 }}
-                    disabled={indicValRight === "None"}
-                  >
-                    {'Continue'}
-                  </Button>
-                  <Button
-                    disabled={false}
-                    onClick={handleBack}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                </div>
-
-              </Box>
-            </StepContent>
-          </Step>
-
-          <Step>
-            <StepLabel optional={yearChoroRight}>
-              {"Select year for this indicator"}
-            </StepLabel>
-            <StepContent>
-            <FormControl fullWidth>
-              <Select
-                // value = {yearState}
-                onChange={(evt) => {
-                  // setYearChoroRight(evt.target.value);
-                  changeHandlerRight(evt);
-                }}
-                // placeholder="Choose a right year..."
+            <Stepper activeStep={activeStep} orientation="vertical">
+              <Step>
+                <StepLabel optional={indicValLeft}>
+                  {"Select the first indicator"}
+                </StepLabel>
+                <StepContent>
+                <FormControl fullWidth>
+                <Select
+                  name="select-indicator"
+                  onChange={(evt) => {
+                    // setIndicValLeft(evt.target.value);
+                    loadYearsLeft(evt);
+                  }}
+                  style={{ maxWidth: "100%"}}
                 >
-                  <Option
-                  value={YearChoro.Y2018}
-                  disabled={disable2018Right}>
-                    {"2018"}</Option>
-                  <Option
-                  value={YearChoro.Y2019}
-                  disabled={disable2019Right}>
-                    {"2019"}</Option>
-                  <Option
-                  value={YearChoro.Y2020}
-                  disabled={disable2020Right}>
-                    {"2020"}</Option>
-                  <Option
-                  value={YearChoro.Y2021}
-                  disabled={disable2021Right}>
-                    {"2021"}</Option>
-              </Select>
-              </FormControl>
+                
+                {/* <Option value="None">{"None"}</Option> */}
+                  <Option header>{"Labor"}</Option>
+                  <Option value={IndicatorVal.LFPR}>{"Labor Force Participation Rate"}</Option>
+                  <Option value={IndicatorVal.Unemployment}>{"Unemployment Rate"}</Option>
+                  <Option value={IndicatorVal.Income}>{"Median Income"}</Option>
+                  <Option divider></Option>
+                  <Option header>{"Poverty"}</Option>
+                  <Option value={IndicatorVal.OP}>{"Overall Poverty"}</Option>
+                  <Option value={IndicatorVal.CP}>{"Child Poverty"}</Option>
+                  <Option value={IndicatorVal.SP}>{"Senior Poverty"}</Option>
+                  <Option value={IndicatorVal.Housing}>{"Housing Burdened"}</Option>
+                  <Option value={IndicatorVal.HHP}>{"Household Poverty"}</Option>
+                  <Option value={IndicatorVal.ALICE}>{"ALICE"}</Option>
+                  <Option value={IndicatorVal.ALICEComb}>{"Combined ALICE and Household Poverty"}</Option>
+                  <Option divider></Option>
+                  <Option header>{"Food Assistance"}</Option>
+                  <Option value={IndicatorVal.FAP}>{"Average Food Assistance Payments"}</Option>
+                  <Option value={IndicatorVal.SNAPHH}>{"SNAP (Households)"}</Option>
+                  <Option value={IndicatorVal.SNAPP}>{"SNAP (Persons)"}</Option>
+                  <Option value={IndicatorVal.WIC}>{"WIC"}</Option>
+                  <Option value={IndicatorVal.SchMeal}>{"Students Receiving School Meals"}</Option>
+                  <Option divider></Option>
+                  <Option header>{"Race/Ethnicity"}</Option>
+                  <Option value={IndicatorVal.White}>{"White"}</Option>
+                  <Option value={IndicatorVal.Black}>{"Black"}</Option>
+                  <Option value={IndicatorVal.Asian}>{"Asian"}</Option>
+                  <Option value={IndicatorVal.PI}>{"Pacific Islander"}</Option>
+                  <Option value={IndicatorVal.Native}>{"Native American"}</Option>
+                  <Option value={IndicatorVal.Other}>{"Other Race"}</Option>
+                  <Option value={IndicatorVal.MultiRace}>{"Multiple Races"}</Option>
+                  <Option value={IndicatorVal.Hispanic}>{"Hispanic"}</Option>
+                  <Option divider></Option>
+                  <Option header>{"Feeding America Model Estimates"}</Option>
+                  <Option value={IndicatorVal.FAC}>{"Child Rates"}</Option>
+                  <Option value={IndicatorVal.FAO}>{"Overall Rates"}</Option>
+                </Select>
+                </FormControl>
               
-              <Box sx={{ mb: 2 }}>
-                <div>
-                  <Button
-                    // value={"swipe"}
-                    onClick={() => {
-                      handleNext();
-                      makeSwipe();
-                      console.log("is this showing", leadLayer, "and", trailLayer);
-                    }}
-                    size="sm"
-                    variant="contained"
-                    disabled={yearChoroRight === "None"}
-                  > Compare
-                  </Button>
-                  
-                  <Button
-                    disabled={false}
-                    onClick={handleBack}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                </div>
+                    <Box sx={{ mb: 2 }}>
+                      <div>
+                        <Button
+                          variant="contained"
+                          onClick={(evt) => {
+                            // loadYearsLeft(evt);
+                            handleNext();
+                            console.log(indicValLeft, yearChoroLeft, indicValRight, yearChoroRight);
+                          }}
+                          sx={{ mt: 1, mr: 1 }}
+                          disabled={indicValLeft === "None"}
+                        >
+                          {'Continue'}
+                        </Button>
+                      </div>
+                    </Box>
+                  </StepContent>
+                </Step>
 
-              </Box>
-            </StepContent>
-          </Step>
-      </Stepper>
+                <Step>
+                  <StepLabel optional={yearChoroLeft}>
+                    {"Select year for this indicator"}
+                  </StepLabel>
+                  <StepContent>
+                  <FormControl fullWidth>
+                    <Select
+                      // value = {yearState}
+                      onChange={(evt) => {
+                        // setYearChoroLeft(evt.target.value);
+                        changeHandlerLeft(evt);
+                      }}>
+                        <Option
+                        value={YearChoro.Y2018}
+                        disabled={disable2018Left}>
+                          {"2018"}</Option>
+                        <Option
+                        value={YearChoro.Y2019}
+                        disabled={disable2019Left}>
+                          {"2019"}</Option>
+                        <Option
+                        value={YearChoro.Y2020}
+                        disabled={disable2020Left}>
+                          {"2020"}</Option>
+                        <Option
+                        value={YearChoro.Y2021}
+                        disabled={disable2021Left}>
+                          {"2021"}</Option>
+                    </Select>
+                    </FormControl>
+                    
+                    <Box sx={{ mb: 2 }}>
+                      <div>
+                        <ColorButton
+                          variant="contained"
+                          onClick={(evt) => {
+                            // loadYearsRight(evt);
+                            // handleReset();
+                            makeChoro(evt);
+                            console.log(indicValLeft, yearChoroLeft, evt.target.value);
+                          }}
+                          sx={{ mt: 1, mr: 1 }}
+                          disabled={yearChoroLeft === "None"}
+                        >
+                          {'Show Indicator'}
+                        </ColorButton>
+                        <br />
+                        <Button
+                          variant="contained"
+                          onClick={(evt) => {
+                            // changeHandlerLeft(evt);
+                            handleNext();
+                            removeAllChoro();
+                            console.log(indicValLeft, yearChoroLeft, indicValRight, yearChoroRight);
+                          }}
+                          sx={{ mt: 1, mr: 1 }}
+                          disabled={yearChoroLeft === "None"}
+                        >
+                          {'Continue'}
+                        </Button>
+                        <Button
+                          disabled={false}
+                          onClick={() => {
+                            handleBack();
+                            removeAllChoro();
+                          }}
+                          sx={{ mt: 1, mr: 1 }}
+                        >
+                          Back
+                        </Button>
+                      </div>
+
+                    </Box>
+                  </StepContent>
+                </Step>
+
+                <Step>
+                  <StepLabel optional={indicValRight}>
+                    {"Select the second indicator"}
+                  </StepLabel>
+                  <StepContent>
+                  <FormControl fullWidth>
+                    <Select
+                      name="select-indicator"
+                      onChange={(evt) => {
+                        // setIndicValRight(evt.target.value);
+                        loadYearsRight(evt);
+                      }}
+                      style={{ maxWidth: "100%"}}
+                      // value = {indicState}
+                    >
+                      {/*Categories: Poverty, Food Assistance, Race, Housing, Labor, Feeding America*/}
+                      {/* <Option value="None">{"None"}</Option> */}
+                      <Option header>{"Labor"}</Option>
+                      <Option value={IndicatorVal.LFPR}>{"Labor Force Participation Rate"}</Option>
+                      <Option value={IndicatorVal.Unemployment}>{"Unemployment Rate"}</Option>
+                      <Option value={IndicatorVal.Income}>{"Median Income"}</Option>
+                      <Option divider></Option>
+                      <Option header>{"Poverty"}</Option>
+                      <Option value={IndicatorVal.OP}>{"Overall Poverty"}</Option>
+                      <Option value={IndicatorVal.CP}>{"Child Poverty"}</Option>
+                      <Option value={IndicatorVal.SP}>{"Senior Poverty"}</Option>
+                      <Option value={IndicatorVal.Housing}>{"Housing Burdened"}</Option>
+                      <Option value={IndicatorVal.HHP}>{"Household Poverty"}</Option>
+                      <Option value={IndicatorVal.ALICE}>{"ALICE"}</Option>
+                      <Option value={IndicatorVal.ALICEComb}>{"Combined ALICE and Household Poverty"}</Option>
+                      <Option divider></Option>
+                      <Option header>{"Food Assistance"}</Option>
+                      <Option value={IndicatorVal.FAP}>{"Average Food Assistance Payments"}</Option>
+                      <Option value={IndicatorVal.SNAPHH}>{"SNAP (Households)"}</Option>
+                      <Option value={IndicatorVal.SNAPP}>{"SNAP (Persons)"}</Option>
+                      <Option value={IndicatorVal.WIC}>{"WIC"}</Option>
+                      <Option value={IndicatorVal.SchMeal}>{"Students Receiving School Meals"}</Option>
+                      <Option divider></Option>
+                      <Option header>{"Race/Ethnicity"}</Option>
+                      <Option value={IndicatorVal.White}>{"White"}</Option>
+                      <Option value={IndicatorVal.Black}>{"Black"}</Option>
+                      <Option value={IndicatorVal.Asian}>{"Asian"}</Option>
+                      <Option value={IndicatorVal.PI}>{"Pacific Islander"}</Option>
+                      <Option value={IndicatorVal.Native}>{"Native American"}</Option>
+                      <Option value={IndicatorVal.Other}>{"Other Race"}</Option>
+                      <Option value={IndicatorVal.MultiRace}>{"Multiple Races"}</Option>
+                      <Option value={IndicatorVal.Hispanic}>{"Hispanic"}</Option>
+                      <Option divider></Option>
+                      <Option header>{"Feeding America Model Estimates"}</Option>
+                      <Option value={IndicatorVal.FAC}>{"Child Rates"}</Option>
+                      <Option value={IndicatorVal.FAO}>{"Overall Rates"}</Option>
+                    </Select>
+                    </FormControl>
+                    
+                    <Box sx={{ mb: 2 }}>
+                      <div>
+                        <Button
+                          variant="contained"
+                          onClick={(evt) => {
+                            // loadYearsRight(evt);
+                            handleNext();
+                            console.log(indicValLeft, yearChoroLeft, indicValRight, yearChoroRight);
+                          }}
+                          sx={{ mt: 1, mr: 1 }}
+                          disabled={indicValRight === "None"}
+                        >
+                          {'Continue'}
+                        </Button>
+                        <Button
+                          disabled={false}
+                          onClick={handleBack}
+                          sx={{ mt: 1, mr: 1 }}
+                        >
+                          Back
+                        </Button>
+                      </div>
+
+                    </Box>
+                  </StepContent>
+                </Step>
+
+                <Step>
+                  <StepLabel optional={yearChoroRight}>
+                    {"Select year for this indicator"}
+                  </StepLabel>
+                  <StepContent>
+                  <FormControl fullWidth>
+                    <Select
+                      // value = {yearState}
+                      onChange={(evt) => {
+                        // setYearChoroRight(evt.target.value);
+                        changeHandlerRight(evt);
+                      }}
+                      // placeholder="Choose a right year..."
+                      >
+                        <Option
+                        value={YearChoro.Y2018}
+                        disabled={disable2018Right}>
+                          {"2018"}</Option>
+                        <Option
+                        value={YearChoro.Y2019}
+                        disabled={disable2019Right}>
+                          {"2019"}</Option>
+                        <Option
+                        value={YearChoro.Y2020}
+                        disabled={disable2020Right}>
+                          {"2020"}</Option>
+                        <Option
+                        value={YearChoro.Y2021}
+                        disabled={disable2021Right}>
+                          {"2021"}</Option>
+                    </Select>
+                    </FormControl>
+                    
+                    <Box sx={{ mb: 2 }}>
+                      <div>
+                        <Button
+                          // value={"swipe"}
+                          onClick={() => {
+                            handleNext();
+                            makeSwipe();
+                            console.log("is this showing", leadLayer, "and", trailLayer);
+                          }}
+                          size="sm"
+                          variant="contained"
+                          disabled={yearChoroRight === "None"}
+                        > Compare
+                        </Button>
+                        
+                        <Button
+                          disabled={false}
+                          onClick={handleBack}
+                          sx={{ mt: 1, mr: 1 }}
+                        >
+                          Back
+                        </Button>
+                      </div>
+
+                    </Box>
+                  </StepContent>
+                </Step>
+            </Stepper>
       {activeStep === 4 && (
-        <Paper square elevation={0} sx={{ p: 4 }}>
-            <Button
-              onClick={() => {
-                // clearMap();
-                handleReset();
-                clearMap();
-                console.log(indicValLeft, yearChoroLeft, indicValRight, yearChoroRight, activeStep);
-              }}
-              sx={{ mt: 1, mr: 1 }}
-              variant="contained"
-            > Reset
-            </Button>
-            <Button
-              disabled={false}
-              onClick={() => {
-                handleBack();
-                jimuMapView.view.ui.find("swipe-widget").destroy();
-                jimuMapView.view.ui.remove("swipe-widget");
-                removeAllChoro();
-              }}
-              sx={{ mt: 1, mr: 1 }}
-              >
-              Back
-            </Button>
+            <Paper square elevation={0} sx={{ p: 4 }}>
+                <Button
+                  onClick={() => {
+                    // clearMap();
+                    handleReset();
+                    clearMap();
+                    console.log(indicValLeft, yearChoroLeft, indicValRight, yearChoroRight, activeStep);
+                  }}
+                  sx={{ mt: 1, mr: 1 }}
+                  variant="contained"
+                > Reset
+                </Button>
+                <Button
+                  disabled={false}
+                  onClick={() => {
+                    handleBack();
+                    jimuMapView.view.ui.find("swipe-widget").destroy();
+                    jimuMapView.view.ui.remove("swipe-widget");
+                    removeAllChoro();
+                  }}
+                  sx={{ mt: 1, mr: 1 }}
+                  >
+                  Back
+                </Button>
+            </Paper>
+          )}
+          </Box>
         </Paper>
-      )}
-    </Box>
-    </Paper>
     </div>
     {/*</CollapsableToggle>*/}
     <br />
