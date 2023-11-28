@@ -20,7 +20,7 @@
 */
 import { SqlExpression, SqlResult, jsx } from 'jimu-core'
 import React, { useState } from 'react';
-import { type AllWidgetProps, SqlQueryParams, DataSourceManager, FeatureLayerDataSource } from 'jimu-core';
+import { type AllWidgetProps, SqlQueryParams, DataSourceManager, FeatureLayerDataSource, DataSource, IMDataSourceInfo } from 'jimu-core';
 import * as d3 from 'd3';
 import raw from './DataRecords.json'
 import raw2 from './flare2.json'
@@ -201,7 +201,42 @@ const h = 600;
 const margin = ({ top: 20, right: 0, bottom: 30, left: 40 })
 
 
+
+
+
+
 function Widget(props: AllWidgetProps<any>) {
+
+
+    const [enableMI, setMI] = useState(false);
+
+    const ShowMI = () => {
+      setMI(!enableMI);
+      console.log(enableMI)
+    };
+
+    const totalPopDataset = []
+
+    useEffect(() => {
+
+      if (props.useDataSources.length > 0) {
+        const dsManager = DataSourceManager.getInstance();
+        const useDataSource = props.useDataSources[0];
+        const ds: FeatureLayerDataSource = dsManager.getDataSource(useDataSource.dataSourceId) as FeatureLayerDataSource;
+
+        if (ds.getSelectedRecords().length > 0) {
+          console.log(ds.getSelectedRecords()[0].getData());
+          totalPopDataset.push(ds.getSelectedRecords()[0].getData().Total_Population__2018_);
+          totalPopDataset.push(ds.getSelectedRecords()[0].getData().Total_Population__2019_);
+          totalPopDataset.push(ds.getSelectedRecords()[0].getData().Total_Population__2020_);
+          console.log(totalPopDataset)
+        }
+      }
+
+    },[enableMI])
+
+    
+
   // Create a React Ref - https://reactjs.org/docs/refs-and-the-dom.html
   const mainRef = useRef<HTMLDivElement>()
 
@@ -225,24 +260,25 @@ function Widget(props: AllWidgetProps<any>) {
 
       const x = d3
         .scaleLinear()
-        .domain([0, d3.max(displayData[displayNumber])])
+        .domain([0, d3.max(totalPopDataset)])
         .range([0, 100])
 
       const div = d3.create('div')
       // Apply some styles to the chart container.
       div.style('font', '20px sans-serif')
-      div.style('text-align', 'left')
+      div.style('text-align', 'center')
       div.style('color', 'white')
 
       // Define the initial (empty) selection for the bars.
       const bar = div.selectAll('div')
 
       // Bind this selection to the data (computing enter, update and exit).
-      const barUpdate = bar.data(displayData[displayNumber])
+      const barUpdate = bar.data(totalPopDataset)
 
       // Join the selection and the data, appending the entering bars.
       const barNew = barUpdate.join('div')
-        .on("click", (event) => console.log(event.x, event.y));
+        // .on("click", (event) => console.log(event.x event.y)
+        //     );
 
 
       // Apply some styles to the bars.
@@ -265,11 +301,17 @@ function Widget(props: AllWidgetProps<any>) {
       mainRef.current.appendChild(div.node())
 
     }
-  }, [mainRef])
+  }, [mainRef, totalPopDataset])
 
   return (
     <div className="App">
       <div ref={mainRef}></div>
+      <Button
+      onClick={ShowMI}
+      size="default"
+      >
+      Button
+      </Button>
     </div>
   )
 }

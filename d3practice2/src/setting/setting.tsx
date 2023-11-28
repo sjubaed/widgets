@@ -75,10 +75,10 @@ const Setting = (props: AllWidgetSettingProps<any>) => {
                 useDataSourcesEnabled
                 types={supportedTypes}
                 useDataSources={props.useDataSources}
-                isMultiple={true}
+                isMultiple={false}
                 onChange={onDataSourceChange}
                 widgetId={props.id}
-                hideDataView={true}
+                hideDataView={false}
                 />
             </div>
           </SettingRow>

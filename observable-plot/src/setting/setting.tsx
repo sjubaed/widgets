@@ -85,25 +85,25 @@ const Setting = (props: AllWidgetSettingProps<any>) => {
   // };
 
   // When a field is chosen from the dropdown, save it to the settings.
-  const fieldsListChangeHandler = (evt, ds: DataSource) => {
-    if (evt && evt.length === 1) {
-      props.onSettingChange({
-        id: props.id,
-        config: props.config.set('filterField', evt[0].name)
-      });
-    }
+  // const fieldsListChangeHandler = (evt, ds: DataSource) => {
+  //   if (evt && evt.length === 1) {
+  //     props.onSettingChange({
+  //       id: props.id,
+  //       config: props.config.set('filterField', evt[0].name)
+  //     });
+  //   }
 
-    setSelectedFields(ds.id)
-  }
+  //   setSelectedFields(ds.id)
+  // }
 
-  const fieldsListChangeHandler2 = (evt) => {
-    if (evt && evt.length === 1) {
-      props.onSettingChange({
-        id: props.id,
-        config: props.config.set('filterField2', evt[0].name)
-      });
-    }
-  }
+  // const fieldsListChangeHandler2 = (evt) => {
+  //   if (evt && evt.length === 1) {
+  //     props.onSettingChange({
+  //       id: props.id,
+  //       config: props.config.set('filterField2', evt[0].name)
+  //     });
+  //   }
+  // }
 
 
     return <div className="widget-setting-demo">
@@ -125,7 +125,7 @@ const Setting = (props: AllWidgetSettingProps<any>) => {
                 <DataSourceSelector
                 mustUseDataSource
                 useDataSourcesEnabled
-                isMultipleDataView
+//                isMultipleDataView
                 types={supportedTypes}
                 useDataSources={props.useDataSources}
                 onChange={onDataSourceChange}
@@ -135,7 +135,7 @@ const Setting = (props: AllWidgetSettingProps<any>) => {
                 />
             </div>
           </SettingRow>
-          <SettingRow>
+{/*          <SettingRow>
               <FieldSelector
                 useDataSources={props.useDataSources}
                 types={supportedFieldTypes}
@@ -147,7 +147,7 @@ const Setting = (props: AllWidgetSettingProps<any>) => {
                 useDropdown
               />
             </SettingRow>
-        </SettingSection>
+*/}        </SettingSection>
 
 {/*        <SettingSection
             className="attribute-selector-section"

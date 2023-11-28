@@ -28,19 +28,8 @@ export default function Widget (props: AllWidgetProps<any>) {
   const mainRef = useRef<HTMLDivElement>()
   // const [data, setData] = useState();
 
-  if (props.useDataSources.length > 0) {
-      const dsManager = DataSourceManager.getInstance();
-      const useDataSource = props.useDataSources[0];
-      const ds: FeatureLayerDataSource = dsManager.getDataSource(useDataSource.dataSourceId) as FeatureLayerDataSource;
-
-      console.log(ds)
-
-      // console.log(queryParams)
-
-    }
-
   const data = d3.ticks(-2, 2, 200).map(Math.sin);
-  console.log(data);
+  // console.log(data);
 
 
   var marginLeft = 100;
@@ -49,12 +38,13 @@ export default function Widget (props: AllWidgetProps<any>) {
   var marginTop = 30;
 
   var height = 894;
+  var width = 100;
   var duration = 750;
   var barStep = 27;
   var barPadding = 3 / barStep;
 
   const color = d3.scaleOrdinal([true, false], ["steelblue", "#aaa"]);
-  console.log(color)
+  // console.log(color)
 
   const yAxis = g => g
     .attr("class", "y-axis")
@@ -70,7 +60,7 @@ export default function Widget (props: AllWidgetProps<any>) {
     .call(d3.axisTop(x).ticks(width / 80, "s"))
     .call(g => (g.selection ? g.selection() : g).select(".domain").remove())
 
-  console.log(xAxis);
+  // console.log(xAxis);
 
   const x = d3.scaleLinear().range([marginLeft, width - marginRight]);
 
@@ -130,7 +120,31 @@ export default function Widget (props: AllWidgetProps<any>) {
   //   .domain([0, d3.max(data)])
   //   .range([0, 100])
 
+  if (props.useDataSources.length > 0) {
+    const dsManager = DataSourceManager.getInstance();
+    const useDataSource = props.useDataSources[0];
+    const ds: FeatureLayerDataSource = dsManager.getDataSource(useDataSource.dataSourceId) as FeatureLayerDataSource;
+
+    console.log(ds);
+
+    ds.query({objectIds:[123]}).then(qr => {
+      MessageManager.getInstance().publishMessage(
+          new DataRecordsSelectionChangeMessage(props.id, qr.records)
+        )
+      ds.selectRecordsByIds?.(qr.records.map((item) => item.getId()))
+    })
+
+    // console.log(queryParams);
+    // ds.updateQueryParams(queryParams, props.id);
+
+  };
+
+  // useEffect(() => {
+  //   console.log(ds)
+  // }, [ds]);
+
   useEffect(() => {
+    
     if (data === undefined) return;
     const plot = Plot.plot({
       y: {grid: true},
@@ -153,6 +167,7 @@ export default function Widget (props: AllWidgetProps<any>) {
         custom Experience Builder widget.
         </p>
       <div ref={mainRef}></div>
+
     </div>
   )
 }
