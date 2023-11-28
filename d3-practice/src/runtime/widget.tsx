@@ -65,6 +65,50 @@ export default function Widget () {
 
       // Set the text of each bar as the data.
       barNew.text((d) => d)
+
+      const svg = d3.create("svg")
+        .attr("width", 800)
+        .attr("height", 600)
+
+      const margin = 200;
+      const width = svg.attr("width") - margin;
+      const height = svg.attr("height") - margin;
+
+      const xScale = d3.scaleBand().range([0, width]).padding(0,5);
+      const yScale = d3.scaleLinear().range([height, 0]);
+
+      const g = svg.append("g")
+                  .attr("transform", "translate(" + 100 + "," + 100 + ")");
+
+      xScale.domain(data);
+      yScale.domain([0, 100]);
+
+
+      g.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(xScale).tickFormat(function(d){
+           return "sale: " + d;
+         })
+      );
+
+      g.append("g")
+        .call(d3.axisLeft(yScale).tickFormat(function(d){
+             return "$" + d;
+         }).ticks(6));
+
+      g.selectAll(".bar")
+       .data(data)
+       .enter().append("rect")
+
+      g.selectAll(".bar")
+         .data(data)
+         .enter().append("rect")
+         .attr("class", "bar")
+         .attr("x", function(d) { return xScale(d); })
+         .attr("y", function(d) { return yScale(d); })
+         .attr("width", xScale.bandwidth())
+         .attr("height", function(d) { return height - yScale(d); });
+
       /**
        * END code from
        * https://observablehq.com/@d3/lets-make-a-bar-chart
@@ -72,7 +116,7 @@ export default function Widget () {
 
       // Place the results from the D3 operation into the DOM using
       // react references - https://reactjs.org/docs/refs-and-the-dom.html
-      mainRef.current.appendChild(div.node())
+      mainRef.current.appendChild(g.node())
     }
   }, [mainRef])
 

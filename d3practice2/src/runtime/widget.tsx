@@ -31,7 +31,7 @@ import LayerList from '@arcgis/core/widgets/LayerList';
 
 const { useEffect, useRef } = React
 
-console.log(raw)
+// console.log(raw)
 
 // Selects which county you want to see the data of
 const selectedCounty = 25
@@ -148,11 +148,11 @@ const displayData = [
 //index for displayData
 const displayNumber = 0
 
-console.log(activeDataSet);
-console.log(topLevelData);
-console.log(racedata2018);
-console.log(racedata2019);
-console.log(racedata2020);
+// console.log(activeDataSet);
+// console.log(topLevelData);
+// console.log(racedata2018);
+// console.log(racedata2019);
+// console.log(racedata2020);
 
 //hierarchy for bar graph
 const data = {
@@ -194,11 +194,16 @@ const data = {
 //forming root nodes
 const root = d3.hierarchy(data);
 
-console.log(displayData[displayNumber])
+// console.log(displayData[displayNumber])
 
 const w = 800;
 const h = 600;
 const margin = ({ top: 20, right: 0, bottom: 30, left: 40 })
+console.log(margin);
+const marginTop = 30;
+const marginRight = 0;
+const marginBottom = 30;
+const marginLeft = 40;
 
 
 
@@ -216,6 +221,8 @@ function Widget(props: AllWidgetProps<any>) {
     };
 
     const totalPopDataset = []
+    // totalPopDataset.year = [{2018, 2019, 2020}]
+    totalPopDataset.value = []
 
     useEffect(() => {
 
@@ -226,13 +233,30 @@ function Widget(props: AllWidgetProps<any>) {
 
         if (ds.getSelectedRecords().length > 0) {
           console.log(ds.getSelectedRecords()[0].getData());
-          totalPopDataset.push(ds.getSelectedRecords()[0].getData().Total_Population__2018_);
-          totalPopDataset.push(ds.getSelectedRecords()[0].getData().Total_Population__2019_);
-          totalPopDataset.push(ds.getSelectedRecords()[0].getData().Total_Population__2020_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Asian_Population__2018_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Asian_Population__2019_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Asian_Population__2020_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Black_Population__2018_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Black_Population__2019_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Black_Population__2020_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Multiple_Races_Population__2018);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Multiple_Races_Population__2019);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Multiple_Races_Population__2020);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Native_Population__2018_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Native_Population__2019_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Native_Population__2020_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Other_Race_Population__2018_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Other_Race_Population__2019_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Other_Race_Population__2020_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Pacific_Islander_Population__20);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Pacific_Islander_Population__21);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Pacific_Islander_Population__22);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().White_Population__2018_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().White_Population__2019_);
+          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().White_Population__2020_);
           console.log(totalPopDataset)
         }
       }
-
     },[enableMI])
 
     
@@ -260,8 +284,15 @@ function Widget(props: AllWidgetProps<any>) {
 
       const x = d3
         .scaleLinear()
-        .domain([0, d3.max(totalPopDataset)])
+        .domain([0, d3.max(totalPopDataset.value)])
         .range([0, 100])
+
+      const y = d3
+        .scaleLinear()
+        .domain([2018, 2020])
+        .range([0, 100])
+
+      // d3.selectAll("svg > *").remove();
 
       const div = d3.create('div')
       // Apply some styles to the chart container.
@@ -273,10 +304,13 @@ function Widget(props: AllWidgetProps<any>) {
       const bar = div.selectAll('div')
 
       // Bind this selection to the data (computing enter, update and exit).
-      const barUpdate = bar.data(totalPopDataset)
+      const barUpdate = bar.data(totalPopDataset.value)
 
       // Join the selection and the data, appending the entering bars.
-      const barNew = barUpdate.join('div')
+      const barNew = barUpdate.join(
+          (enter) => enter.append('div'),
+          (exit) => exit.remove('div')
+        )
         // .on("click", (event) => console.log(event.x event.y)
         //     );
 
@@ -295,6 +329,39 @@ function Widget(props: AllWidgetProps<any>) {
       // Set the text of each bar as the data.
       barNew.text((d) => d)
 
+      const svg = d3.create("svg")
+        .attr("width", w)
+        .attr("height", h)
+        .attr("viewBox", [0, 0, w, h])
+        .attr("style", "max-width: 100%; height: auto;");
+
+      svg.append("div")
+          .attr("transform", `translate(0,${h - marginBottom})`)
+          .call(d3.axisBottom(x));
+        
+
+      //   .join("rect")
+      //     .attr("x", (d) => x(d."0"))
+      //     .attr("y", (d) => y(d."1"))
+      //     .attr("height", (d) => y(0) - y(d."1"))
+      //     .attr("width", x.bandwidth());
+
+      // // Add the x-axis and label.
+      // svg.append("g")
+      //     .attr("transform", `translate(0,${h - marginBottom})`)
+      //     .call(d3.axisBottom(x).tickSizeOuter(0));
+
+      // // Add the y-axis and label, and remove the domain line.
+      // svg.append("g")
+      //   .attr("transform", `translate(${marginLeft},0)`)
+      //   .call(d3.axisLeft(y).tickFormat((y) => (y * 100).toFixed()))
+      //   .call(g => g.select(".domain").remove())
+      //   .call(g => g.append("text")
+      //     .attr("x", -marginLeft)
+      //     .attr("y", 10)
+      //     .attr("fill", "currentColor")
+      //     .attr("text-anchor", "start")
+      //     .text("↑ Frequency (%)"));
 
       //d3 code end
 
@@ -303,15 +370,32 @@ function Widget(props: AllWidgetProps<any>) {
     }
   }, [mainRef, totalPopDataset])
 
+  const gx = useRef();
+  const gy = useRef();
+
+  const x = d3.scaleLinear([0, totalPopDataset.length - 1], [marginLeft, w - marginRight]);
+  const y = d3.scaleLinear(d3.extent(totalPopDataset), [h - marginBottom, marginTop]);
+  const line = d3.line((d, i) => x(i), y);
+
   return (
     <div className="App">
       <div ref={mainRef}></div>
-      <Button
-      onClick={ShowMI}
-      size="default"
-      >
-      Button
-      </Button>
+{/*      <svg width={800} height={600}>
+        <g ref={gx} transform={`translate(0,${h - marginBottom})`} />
+        <g ref={gy} transform={`translate(${marginLeft},0)`} />
+        <path fill="none" stroke="currentColor" stroke-width="1.5" d={line(totalPopDataset)} />
+        <g fill="white" stroke="currentColor" stroke-width="1.5">
+          {totalPopDataset.map((d, i) => (<circle key={i} cx={x(i)} cy={y(d)} r="2.5" />))}
+        </g>
+      </svg>
+*/}      <div>
+        <Button
+          onClick={ShowMI}
+          size="default"
+        >
+        Add Bars
+        </Button>
+      </div>
     </div>
   )
 }
