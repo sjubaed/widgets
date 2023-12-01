@@ -54,7 +54,12 @@ interface BarsProps {
 //   data: Data[];
 // }
 
-const data2 = [100, 200, 50, 150]
+const data2 = [
+  { label: "Apples", value: 100 },
+  { label: "Bananas", value: 200 },
+  { label: "Oranges", value: 50 },
+  { label: "Kiwis", value: 150 }
+];
 
 
 function barChart({ data }: BarChartProps) {
@@ -64,6 +69,7 @@ function barChart({ data }: BarChartProps) {
 
   const scaleX = d3.scaleBand(["Apples", "Bananas", "Oranges", "Kiwis"], [0, width]);
   const scaleY = d3.scaleLinear([200,0], [0, height]);
+
   console.log(data2)
 
   return (
@@ -74,7 +80,7 @@ function barChart({ data }: BarChartProps) {
       <g transform={`translate(${margin.left}, ${margin.top})`}>
         <AxisBottom scale={scaleX} transform={`translate(0, ${height})`} />
         <AxisLeft scale={scaleY} />
-        <Bars data={data2} />
+        <Bars data={data2} height={height} scaleX={scaleX} scaleY={scaleY} />
       </g>
     </svg>
   );
@@ -104,29 +110,35 @@ function AxisLeft({ scale }: AxisLeftProps) {
   return <g ref={ref} />;
 }
 
-function Bars({ data }: BarsProps) {
-  const ref = useRef<SVGGElement>(null);
+function Bars({ data, height, scaleX, scaleY }: BarsProps) {
+  //const ref = useRef<SVGGElement>(null);
+  // useEffect(() => {
+  //   if (ref.current) {
+  //     const bar = svg.selectAll("svg");
+  //     const barUpdate = bar.data(data);
+  //     const barNew = barUpdate.join("bar")
+  //     barNew.style('background', 'steelblue')
+  //     // barNew.style('padding', '3px')
+  //     // barNew.style('margin', '4px')
+  //     // barNew.style('width', (d) => `${x(d)}px`)
+  //     // barNew.text((d) => d)
+  //     //ref.current.appendChild(svg.node())
+  //   }
+  // }, [data])
 
-  useEffect(() => {
-    if (ref.current) {
-      const bar = d3.select("bar");
-      const barUpdate = bar.data(data);
-      const barNew = barUpdate.join("bar")
-      barNew.style('background', 'steelblue')
-      // barNew.style('padding', '3px')
-      // barNew.style('margin', '4px')
-      // barNew.style('width', (d) => `${x(d)}px`)
-      // barNew.text((d) => d)
-
-      //ref.current.appendChild(svg.node())
-
-
-
-
-    }
-  }, [data])
-
-  return <g ref={ref} />;
+  return (
+    <>
+    {data.map(({ value, label}) => (
+      <rect
+        x={scaleX(label)}
+        y={scaleY(value)}
+        width={scaleX.bandwidth()}
+        height={height - scaleY(value)}
+        fill="teal"
+        />
+        ))}
+    </>
+    );
 }
 
 export default barChart

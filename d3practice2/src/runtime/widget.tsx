@@ -22,8 +22,8 @@ import { SqlExpression, SqlResult, jsx } from 'jimu-core'
 import React, { useState } from 'react';
 import { type AllWidgetProps, SqlQueryParams, DataSourceManager, FeatureLayerDataSource, DataSource, IMDataSourceInfo } from 'jimu-core';
 import * as d3 from 'd3';
-import raw from './DataRecords.json'
-import raw2 from './flare2.json'
+// import raw from './DataRecords.json'
+// import raw2 from './flare2.json'
 import * as fs from 'fs';
 import { Button } from 'jimu-ui'
 import { JimuMapView, JimuMapViewComponent } from "jimu-arcgis";
@@ -58,27 +58,27 @@ const countyPIPop2019 = []
 const countyPIPop2020 = []
 
 //for loop to parse json file to get relavent data
-for (let i = 0; i < 82; i++) {
-  countyNames.push(raw[i].attributes.County_Name)
-  countyPop2018.push(raw[i].attributes.Total_Population__2018_)
-  countyPop2019.push(raw[i].attributes.Total_Population__2019_)
-  countyPop2020.push(raw[i].attributes.Total_Population__2020_)
-  countyWhitePop2018.push(raw[i].attributes.White_Population__2018_)
-  countyWhitePop2019.push(raw[i].attributes.White_Population__2019_)
-  countyWhitePop2020.push(raw[i].attributes.White_Population__2020_)
-  countyBlackPop2018.push(raw[i].attributes.Black_Population__2018_)
-  countyBlackPop2019.push(raw[i].attributes.Black_Population__2019_)
-  countyBlackPop2020.push(raw[i].attributes.Black_Population__2020_)
-  countyAsianPop2018.push(raw[i].attributes.Asian_Population__2018_)
-  countyAsianPop2019.push(raw[i].attributes.Asian_Population__2019_)
-  countyAsianPop2020.push(raw[i].attributes.Asian_Population__2020_)
-  countyNativePop2018.push(raw[i].attributes.Native_Population__2018_)
-  countyNativePop2019.push(raw[i].attributes.Native_Population__2019_)
-  countyNativePop2020.push(raw[i].attributes.Native_Population__2020_)
-  countyPIPop2018.push(raw[i].attributes.Pacific_Islander_Population__20)
-  countyPIPop2019.push(raw[i].attributes.Pacific_Islander_Population__21)
-  countyPIPop2020.push(raw[i].attributes.Pacific_Islander_Population__22)
-};
+// for (let i = 0; i < 82; i++) {
+//   countyNames.push(raw[i].attributes.County_Name)
+//   countyPop2018.push(raw[i].attributes.Total_Population__2018_)
+//   countyPop2019.push(raw[i].attributes.Total_Population__2019_)
+//   countyPop2020.push(raw[i].attributes.Total_Population__2020_)
+//   countyWhitePop2018.push(raw[i].attributes.White_Population__2018_)
+//   countyWhitePop2019.push(raw[i].attributes.White_Population__2019_)
+//   countyWhitePop2020.push(raw[i].attributes.White_Population__2020_)
+//   countyBlackPop2018.push(raw[i].attributes.Black_Population__2018_)
+//   countyBlackPop2019.push(raw[i].attributes.Black_Population__2019_)
+//   countyBlackPop2020.push(raw[i].attributes.Black_Population__2020_)
+//   countyAsianPop2018.push(raw[i].attributes.Asian_Population__2018_)
+//   countyAsianPop2019.push(raw[i].attributes.Asian_Population__2019_)
+//   countyAsianPop2020.push(raw[i].attributes.Asian_Population__2020_)
+//   countyNativePop2018.push(raw[i].attributes.Native_Population__2018_)
+//   countyNativePop2019.push(raw[i].attributes.Native_Population__2019_)
+//   countyNativePop2020.push(raw[i].attributes.Native_Population__2020_)
+//   countyPIPop2018.push(raw[i].attributes.Pacific_Islander_Population__20)
+//   countyPIPop2019.push(raw[i].attributes.Pacific_Islander_Population__21)
+//   countyPIPop2020.push(raw[i].attributes.Pacific_Islander_Population__22)
+// };
 
 //gets all relavent data for specific county
 const activeDataSet = [
@@ -197,13 +197,13 @@ const root = d3.hierarchy(data);
 // console.log(displayData[displayNumber])
 
 const w = 800;
-const h = 600;
-const margin = ({ top: 20, right: 0, bottom: 30, left: 40 })
+const h = 400;
+const margin = ({ top: 20, right: 0, bottom: 30, left: 30 })
 console.log(margin);
-const marginTop = 30;
+const marginTop = 20;
 const marginRight = 0;
-const marginBottom = 30;
-const marginLeft = 40;
+const marginBottom = 20;
+const marginLeft = 30;
 
 
 
@@ -220,9 +220,10 @@ function Widget(props: AllWidgetProps<any>) {
       console.log(enableMI)
     };
 
-    const totalPopDataset = []
+    //const totalPopDataset = []
     // totalPopDataset.year = [{2018, 2019, 2020}]
-    totalPopDataset.value = []
+    //totalPopDataset.value = []
+    let totalPopDataset : { key: string, value: number}[] = []
 
     useEffect(() => {
 
@@ -233,29 +234,31 @@ function Widget(props: AllWidgetProps<any>) {
 
         if (ds.getSelectedRecords().length > 0) {
           console.log(ds.getSelectedRecords()[0].getData());
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Asian_Population__2018_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Asian_Population__2019_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Asian_Population__2020_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Black_Population__2018_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Black_Population__2019_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Black_Population__2020_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Multiple_Races_Population__2018);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Multiple_Races_Population__2019);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Multiple_Races_Population__2020);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Native_Population__2018_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Native_Population__2019_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Native_Population__2020_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Other_Race_Population__2018_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Other_Race_Population__2019_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Other_Race_Population__2020_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Pacific_Islander_Population__20);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Pacific_Islander_Population__21);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Pacific_Islander_Population__22);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().White_Population__2018_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().White_Population__2019_);
-          totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().White_Population__2020_);
+          totalPopDataset.push({key:"2018",value:ds.getSelectedRecords()[0].getData().Asian_Population__2018_});
+          totalPopDataset.push({key:"2019",value:ds.getSelectedRecords()[0].getData().Asian_Population__2019_});
+          totalPopDataset.push({key:"2020",value:ds.getSelectedRecords()[0].getData().Asian_Population__2020_});
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Black_Population__2018_);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Black_Population__2019_);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Black_Population__2020_);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Multiple_Races_Population__2018);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Multiple_Races_Population__2019);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Multiple_Races_Population__2020);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Native_Population__2018_);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Native_Population__2019_);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Native_Population__2020_);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Other_Race_Population__2018_);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Other_Race_Population__2019_);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Other_Race_Population__2020_);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Pacific_Islander_Population__20);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Pacific_Islander_Population__21);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().Pacific_Islander_Population__22);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().White_Population__2018_);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().White_Population__2019_);
+          // totalPopDataset.value.push(ds.getSelectedRecords()[0].getData().White_Population__2020_);
           console.log(totalPopDataset)
         }
+
+
       }
     },[enableMI])
 
@@ -282,17 +285,60 @@ function Widget(props: AllWidgetProps<any>) {
 
       //d3 code
 
-      const x = d3
+      const xScale = d3
         .scaleLinear()
-        .domain([0, d3.max(totalPopDataset.value)])
-        .range([0, 100])
+        // .domain([0, d3.max(totalPopDataset.value)])
+        .domain([0, 100000])
+        .range([0, 500])
 
-      const y = d3
-        .scaleLinear()
-        .domain([2018, 2020])
-        .range([0, 100])
+      const yScale = d3
+        .scaleBand()
+        .domain(['2018', '2019', '2020'])
+        .range([0, 200])
 
       // d3.selectAll("svg > *").remove();
+
+      const svgEl = d3.select(mainRef.current);
+      svgEl.selectAll("*").remove();
+
+      const svg = svgEl
+        .append("g")
+        .attr("transform", `translate(${marginLeft},${marginTop})`);
+
+      /******************************************/
+      const xAxis = d3.axisTop(xScale)
+        // .ticks(3)
+        // .tickSize(-h + marginBottom);
+
+      const xAxisGroup = svg.append("g")
+      //  .attr("transform", `translate(0, ${h - marginBottom})`)
+        .call(xAxis);
+
+      // xAxisGroup.select(".domain").remove();
+      
+      // xAxisGroup.selectAll("line").attr("stroke", "rgba(255, 255, 255, 0.2)");
+      
+      // xAxisGroup.selectAll("text")
+      //   .attr("opacity", 0.5)
+      //   .attr("color", "white")
+      //   .attr("font-size", "0.75rem");
+      /******************************************/
+      const yAxis = d3.axisLeft(yScale)
+        // .ticks(3)
+        // .tickSize(-w + marginLeft)
+        // .tickFormat((val) => `${val}`);
+      
+      const yAxisGroup = svg.append("g").call(yAxis);
+      
+      // yAxisGroup.select(".domain").remove();
+      
+      // yAxisGroup.selectAll("line").attr("stroke", "rgba(255, 255, 255, 0.2)");
+      
+      // yAxisGroup.selectAll("text")
+      //   .attr("opacity", 0.5)
+      //   .attr("color", "white")
+      //   .attr("font-size", "0.75rem");
+
 
       const div = d3.create('div')
       // Apply some styles to the chart container.
@@ -304,12 +350,12 @@ function Widget(props: AllWidgetProps<any>) {
       const bar = div.selectAll('div')
 
       // Bind this selection to the data (computing enter, update and exit).
-      const barUpdate = bar.data(totalPopDataset.value)
+      const barUpdate = bar.data([])
 
       // Join the selection and the data, appending the entering bars.
-      const barNew = barUpdate.join(
-          (enter) => enter.append('div'),
-          (exit) => exit.remove('div')
+      const barNew = barUpdate.join('div'
+          // (enter) => enter.append('div'),
+          // (exit) => exit.remove('div')
         )
         // .on("click", (event) => console.log(event.x event.y)
         //     );
@@ -329,15 +375,17 @@ function Widget(props: AllWidgetProps<any>) {
       // Set the text of each bar as the data.
       barNew.text((d) => d)
 
-      const svg = d3.create("svg")
-        .attr("width", w)
-        .attr("height", h)
-        .attr("viewBox", [0, 0, w, h])
-        .attr("style", "max-width: 100%; height: auto;");
+      svg.selectAll("div")
 
-      svg.append("div")
-          .attr("transform", `translate(0,${h - marginBottom})`)
-          .call(d3.axisBottom(x));
+      // const svg = d3.create("svg")
+      //   .attr("width", w)
+      //   .attr("height", h)
+      //   .attr("viewBox", [0, 0, w, h])
+      //   .attr("style", "max-width: 100%; height: auto;");
+
+      // svg.append("div")
+      //     .attr("transform", `translate(0,${h - marginBottom})`)
+      //     .call(d3.axisBottom(x));
         
 
       //   .join("rect")
@@ -365,21 +413,22 @@ function Widget(props: AllWidgetProps<any>) {
 
       //d3 code end
 
-      mainRef.current.appendChild(div.node())
+      //mainRef.current.appendChild(div.node())
 
     }
-  }, [mainRef, totalPopDataset])
+  }, [totalPopDataset])
 
   const gx = useRef();
   const gy = useRef();
 
-  const x = d3.scaleLinear([0, totalPopDataset.length - 1], [marginLeft, w - marginRight]);
-  const y = d3.scaleLinear(d3.extent(totalPopDataset), [h - marginBottom, marginTop]);
-  const line = d3.line((d, i) => x(i), y);
+  // const x = d3.scaleLinear([0, totalPopDataset.length - 1], [marginLeft, w - marginRight]);
+  // const y = d3.scaleLinear(d3.extent(totalPopDataset), [h - marginBottom, marginTop]);
+  // const line = d3.line((d, i) => x(i), y);
 
   return (
     <div className="App">
-      <div ref={mainRef}></div>
+      {/*<div ref={mainRef}></div>*/}
+    <svg ref={mainRef} width={w} height={h}> </svg>
 {/*      <svg width={800} height={600}>
         <g ref={gx} transform={`translate(0,${h - marginBottom})`} />
         <g ref={gy} transform={`translate(${marginLeft},0)`} />
