@@ -54,12 +54,52 @@ interface BarsProps {
 //   data: Data[];
 // }
 
+const data3 = {
+  name: "Lead",
+  children: [
+  {
+    name: "Seeded",
+    children: [
+      { name: "Apples", value: 100 },
+      { name: "Oranges", value: 50},
+      { name: "Kiwis", value: 150}
+    ]
+  },
+  {
+    name: "Berries",
+    children: [
+      { name: "Bananas", value: 200 },
+      { name: "Cherries", value: 90 }
+    ]
+  }
+  ]
+};
+
+const data4 = {
+  name: "Eve",
+  children: [
+    {name: "Cain", value: 200},
+    {name: "Seth", children: [{name: "Enos", value: 100}, {name: "Noam", value: 20}]},
+    {name: "Abel", value: 0},
+    {name: "Awan", children: [{name: "Enoch", value: 50}]},
+    {name: "Azura", value: 10}
+  ]
+};
+
 const data2 = [
-  { label: "Apples", value: 100 },
+  { label: "Apples", value: 100},
   { label: "Bananas", value: 200 },
+  { label: "Cherries", value: 90 },
   { label: "Oranges", value: 50 },
   { label: "Kiwis", value: 150 }
 ];
+
+const rootHier = d3.hierarchy(data3)
+  .sum(d => d.value)
+  .sort((a, b) => b.value - a.value)
+  .eachAfter(d => d.index = d.parent ? d.parent.index = d.parent.index + 1 || 0 : 0)
+
+console.log(rootHier)
 
 
 function barChart({ data }: BarChartProps) {
@@ -67,8 +107,8 @@ function barChart({ data }: BarChartProps) {
   const width = 500 - margin.left - margin.right;
   const height = 300 - margin.top - margin.bottom;
 
-  const scaleX = d3.scaleBand(["Apples", "Bananas", "Oranges", "Kiwis"], [0, width]);
-  const scaleY = d3.scaleLinear([200,0], [0, height]);
+  const scaleX = d3.scaleBand(data2.map(({ label }) => label), [0, width]);
+  const scaleY = d3.scaleLinear([0, Math.max(...data2.map(({ value }) => value))], [height, 0]);
 
   console.log(data2)
 
